@@ -319,8 +319,9 @@ function DashboardInner() {
   };
 
   const chartData = useMemo(() => {
-    if (!data?.charts?.area) return [];
-    const raw = data.charts.area.map(d => ({
+    const area = data?.charts?.area;
+    if (!area || !Array.isArray(area)) return [];
+    const raw = area.map(d => ({
       date: d.date, isoDate: d.isoDate, sortKey: d.sortKey,
       receita: Number(d.receita || 0), cmv: Number(d.cmv || 0),
       mc: Number(d.mc || 0), volume: Number(d.volume || 0),
@@ -334,6 +335,7 @@ function DashboardInner() {
   );
 
   // ── Derived data (safe when data is null) ──
+  const charts = data?.charts || {};
   const kpis = data?.kpis || {};
   const allDeptsData = useMemo(() => {
     const raw = [...(data?.charts?.marcasDonut || [])].sort((a, b) => (b.value || 0) - (a.value || 0));
@@ -353,7 +355,7 @@ function DashboardInner() {
 
   // Sparkline data (12 months receita)
   const sparklineData = useMemo(() => {
-    const area = data.charts?.area || [];
+    const area = data?.charts?.area || [];
     const byMonth = {};
     area.forEach(pt => {
       const ym = (pt.isoDate || pt.date || '').substring(0, 7);
@@ -362,10 +364,10 @@ function DashboardInner() {
       byMonth[ym] += pt.receita || 0;
     });
     return Object.values(byMonth).slice(-12);
-  }, [data.charts?.area]);
+  }, [data?.charts?.area]);
 
   const sparklineMc = useMemo(() => {
-    const area = data.charts?.area || [];
+    const area = data?.charts?.area || [];
     const byMonth = {};
     area.forEach(pt => {
       const ym = (pt.isoDate || pt.date || '').substring(0, 7);
@@ -374,11 +376,11 @@ function DashboardInner() {
       byMonth[ym] += pt.mc || 0;
     });
     return Object.values(byMonth).slice(-12);
-  }, [data.charts?.area]);
+  }, [data?.charts?.area]);
 
   // Stacked bar data for wide KPI card (12m CMV vs Margem)
   const stackedBarData = useMemo(() => {
-    const area = data.charts?.area || [];
+    const area = data?.charts?.area || [];
     const byMonth = {};
     area.forEach(pt => {
       const ym = (pt.isoDate || pt.date || '').substring(0, 7);
@@ -399,12 +401,12 @@ function DashboardInner() {
       top: (v.top / maxVal) * 100,
       label: v.label,
     }));
-  }, [data.charts?.area]);
+  }, [data?.charts?.area]);
 
   // Projection chart data
   const projectionData = useMemo(() => {
     const byMonth = {};
-    (data.charts?.area || []).forEach(pt => {
+    (data?.charts?.area || []).forEach(pt => {
       const ym = (pt.isoDate || pt.date || '').substring(0, 7);
       if (!ym) return;
       if (!byMonth[ym]) byMonth[ym] = 0;
@@ -421,7 +423,7 @@ function DashboardInner() {
         label: MONTHS[(parseInt(m) - 1) % 12],
       };
     });
-  }, [data.charts?.area]);
+  }, [data?.charts?.area]);
 
   const todayIdx = Math.max(0, Math.floor(projectionData.length * 0.75));
   const metaReceita = avgReceita * 12 * 1.05;
@@ -451,7 +453,7 @@ function DashboardInner() {
   const divergingData = useMemo(() => {
     const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const byMonth = {};
-    (data.charts?.area || []).forEach(pt => {
+    (data?.charts?.area || []).forEach(pt => {
       const ym = (pt.isoDate || pt.date || '').substring(0, 7);
       if (!ym) return;
       if (!byMonth[ym]) byMonth[ym] = { positive: 0, negative: 0 };
@@ -468,7 +470,7 @@ function DashboardInner() {
         label: MONTHS[(parseInt(m) - 1) % 12],
       };
     });
-  }, [data.charts?.area]);
+  }, [data?.charts?.area]);
 
   // Sankey stages from departments and stores
   const sankeyStages = useMemo(() => {
@@ -809,11 +811,11 @@ function DashboardInner() {
         isOpen={!!selectedModalKpi}
         onClose={() => { setSelectedModalKpi(null); setCardOrigin(null); }}
         type={selectedModalKpi}
-        kpiData={data.kpis}
-        drilldownData={data.drilldown}
-        chartData={chartData}
-        allDeptsData={allDeptsData}
-        storesData={stores}
+        kpiData={data?.kpis || {}}
+        drilldownData={data?.drilldown || {}}
+        chartData={chartData || []}
+        allDeptsData={allDeptsData || []}
+        storesData={stores || []}
         crossLoja={crossLoja}
         crossDepto={crossDepto}
         crossPeriod={crossPeriod}

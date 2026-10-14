@@ -163,11 +163,10 @@ export default function SynergyModal({ data, open, onClose }) {
   const [hovCell, setHovCell] = useState(null);
 
   const { seriesData, corrMatrix, zMatrix, periodLabels, variations } = useMemo(() => {
-    if (!data?.charts?.area || data.charts.area.length === 0) {
+    const area = data?.charts?.area || [];
+    if (!area || area.length === 0) {
       return { seriesData: [], corrMatrix: [], zMatrix: [], periodLabels: [], variations: [] };
     }
-
-    const area = data.charts.area;
     // Group by month
     const byMonth = {};
     area.forEach(pt => {
