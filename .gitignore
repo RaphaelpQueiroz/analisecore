@@ -49,8 +49,17 @@ next-env.d.ts
 backup_*/
 scratch/
 
-# large data files (>100MB exceeds GitHub limit; compressed .gz are preserved)
+# archives & compressed files
+*.gz
+*.zip
+*.tar
+*.rar
+*.7z
+
+# large data dumps (keeping only text schemas/metadata)
 data/supermarket/products_monthly.json
+data/supermarket/daily_sales.json
+data/supermarket/clients_daily.json
 *.parquet
 .backup-dre-data.json
 
