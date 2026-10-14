@@ -1,0 +1,99 @@
+# Gerador de Logo Vetorial SVG e PNG de Alta Resolucao para 'Análises Core'
+svg_content = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 180" width="100%" height="100%" fill="none">
+  <defs>
+    <!-- Gradientes do Hexágono Cristalino / Core -->
+    <linearGradient id="coreGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <linearGradient id="facetTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+
+    <linearGradient id="facetRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+
+    <linearGradient id="facetLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <linearGradient id="facetBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#172554"/>
+    </linearGradient>
+
+    <linearGradient id="innerCore" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#67e8f9"/>
+      <stop offset="60%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- ================= SÍMBOLO: CORE CRISTALINO ================= -->
+  <g transform="translate(40, 20)">
+    <!-- Aura de fundo brilhante -->
+    <polygon points="70,10 130,45 130,115 70,150 10,115 10,45" fill="url(#coreGlow)" opacity="0.12" filter="url(#subtleGlow)"/>
+
+    <!-- Faceta Superior Esquerda -->
+    <polygon points="70,15 10,50 35,65 70,45" fill="url(#facetTop)"/>
+    
+    <!-- Faceta Superior Direita -->
+    <polygon points="70,15 130,50 105,65 70,45" fill="url(#facetTop)" opacity="0.88"/>
+
+    <!-- Faceta Direita Superior -->
+    <polygon points="130,50 130,110 105,95 105,65" fill="url(#facetRight)"/>
+
+    <!-- Faceta Direita Inferior -->
+    <polygon points="130,110 70,145 70,115 105,95" fill="url(#facetBottom)"/>
+
+    <!-- Faceta Esquerda Inferior -->
+    <polygon points="70,145 10,110 35,95 70,115" fill="url(#facetBottom)" opacity="0.95"/>
+
+    <!-- Faceta Esquerda Superior -->
+    <polygon points="10,110 10,50 35,65 35,95" fill="url(#facetLeft)"/>
+
+    <!-- NÚCLEO INTERNO PULSANTE (O CORE CENTRAL) -->
+    <polygon points="70,45 105,65 105,95 70,115 35,95 35,65" fill="url(#innerCore)"/>
+
+    <!-- Brilho de Corte Angular no Centro -->
+    <polygon points="70,52 98,68 98,92 70,108 42,92 42,68" fill="#ffffff" opacity="0.28"/>
+    <polygon points="70,58 90,70 70,95 50,70" fill="#ffffff" opacity="0.6"/>
+
+    <!-- Arestas de Destaque -->
+    <polyline points="10,50 70,15 130,50 130,110 70,145 10,110 10,50" stroke="#bae6fd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+  </g>
+
+  <!-- ================= TIPOGRAFIA: ANÁLISES CORE ================= -->
+  <!-- TEXTO VERSÃO DARK (Texto Branco com Acento Ciano) -->
+  <g id="text-dark" transform="translate(200, 92)">
+    <text font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="44" font-weight="300" fill="#ffffff" letter-spacing="4">
+      ANÁLISES
+    </text>
+    <text x="238" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="44" font-weight="900" fill="#38bdf8" letter-spacing="3">
+      CORE
+    </text>
+    <text y="32" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#94a3b8" letter-spacing="7">
+      FINANCIAL RETAIL INTELLIGENCE
+    </text>
+  </g>
+</svg>'''
+
+import os
+
+os.makedirs('public/images', exist_ok=True)
+
+with open('public/images/logo-core.svg', 'w', encoding='utf-8') as f:
+    f.write(svg_content)
+
+print("SVG logo salvo com sucesso em public/images/logo-core.svg!")

@@ -1,0 +1,3061 @@
+{
+  "last_update": "2026-09-30T12:22:18.425074",
+  "z_scores": [
+    {
+      "depto": "ATACADO",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 0.92,
+          "z_margem": 0.96
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.38,
+          "z_margem": 2.41
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.27,
+          "z_margem": 0.27
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 0.89,
+          "z_margem": 0.78
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 1.41,
+          "z_margem": 1.44
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 2.52,
+          "z_margem": 2.57
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.7,
+          "z_margem": -0.7
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.1,
+          "z_margem": 0.15
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": -0.27,
+          "z_margem": -0.26
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.71,
+          "z_margem": -0.7
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.01,
+          "z_margem": 0.05
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.77,
+          "z_margem": 0.79
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.63,
+          "z_margem": -0.67
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.26,
+          "z_margem": -0.32
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": -0.4,
+          "z_margem": -0.39
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.78,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": 1.35,
+          "z_margem": 1.22
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.66,
+          "z_margem": -0.63
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.89,
+          "z_margem": -0.92
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.65,
+          "z_margem": -0.63
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.56,
+          "z_margem": -0.57
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.19,
+          "z_margem": -0.2
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.79,
+          "z_margem": -0.78
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.27,
+          "z_margem": -0.3
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.66,
+          "z_margem": -0.65
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.1,
+          "z_margem": -1.09
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.1,
+          "z_margem": -1.09
+        }
+      ]
+    },
+    {
+      "depto": "AÇOUGUE",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 1.73,
+          "z_margem": 1.52
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 4.14,
+          "z_margem": 4.23
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.53,
+          "z_margem": 0.19
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 1.0,
+          "z_margem": 0.56
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.08,
+          "z_margem": 0.42
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.22,
+          "z_margem": 0.1
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.53,
+          "z_margem": -0.73
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": -0.16,
+          "z_margem": -0.07
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": -0.13,
+          "z_margem": 0.09
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.46,
+          "z_margem": -0.45
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": -0.19,
+          "z_margem": 0.04
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": -0.22,
+          "z_margem": 0.01
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.64,
+          "z_margem": -0.58
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.41,
+          "z_margem": -0.29
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.21,
+          "z_margem": 0.55
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.36,
+          "z_margem": -0.41
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": 0.62,
+          "z_margem": 0.53
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": 0.12,
+          "z_margem": 0.03
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.41,
+          "z_margem": -0.41
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.37,
+          "z_margem": -0.2
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.54,
+          "z_margem": -0.6
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.25,
+          "z_margem": 0.01
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.35,
+          "z_margem": -0.43
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.75,
+          "z_margem": -0.81
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.24,
+          "z_margem": -0.42
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -0.89,
+          "z_margem": -0.97
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -0.86,
+          "z_margem": -0.94
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -0.88,
+          "z_margem": -0.97
+        }
+      ]
+    },
+    {
+      "depto": "AÇOUGUE2",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": -0.04,
+          "z_margem": 0.2
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 0.7,
+          "z_margem": 1.39
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": -0.47,
+          "z_margem": -0.45
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.49,
+          "z_margem": -0.45
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": -0.29,
+          "z_margem": -0.32
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": -0.23,
+          "z_margem": -0.33
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": 0.85,
+          "z_margem": 0.49
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 2.59,
+          "z_margem": 1.78
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 3.25,
+          "z_margem": 3.37
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": 0.09,
+          "z_margem": 0.07
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.79,
+          "z_margem": 1.14
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.41,
+          "z_margem": 0.64
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.63,
+          "z_margem": -0.73
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.24,
+          "z_margem": 0.0
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": -0.37,
+          "z_margem": -0.3
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.59,
+          "z_margem": -0.66
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.58,
+          "z_margem": -0.59
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.54,
+          "z_margem": -0.62
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.62,
+          "z_margem": -0.69
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.5,
+          "z_margem": -0.51
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.65,
+          "z_margem": -0.74
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.51,
+          "z_margem": -0.51
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.65,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.66,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.62,
+          "z_margem": -0.68
+        }
+      ]
+    },
+    {
+      "depto": "BEBIDAS",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 0.19,
+          "z_margem": -0.41
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.57,
+          "z_margem": 2.17
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.13,
+          "z_margem": 0.16
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.74,
+          "z_margem": -0.72
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": -0.26,
+          "z_margem": -0.2
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.62,
+          "z_margem": 0.63
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.51,
+          "z_margem": -0.53
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.13,
+          "z_margem": 0.0
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.95,
+          "z_margem": 0.96
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": 1.34,
+          "z_margem": 1.71
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 1.14,
+          "z_margem": 1.31
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.47,
+          "z_margem": 0.44
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.73,
+          "z_margem": -0.74
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.23,
+          "z_margem": -0.24
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 2.91,
+          "z_margem": 3.01
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.26,
+          "z_margem": -0.13
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.43,
+          "z_margem": -0.42
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.66,
+          "z_margem": -0.64
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.28,
+          "z_margem": -0.23
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.57,
+          "z_margem": -0.55
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.53,
+          "z_margem": -0.53
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.26,
+          "z_margem": -0.2
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.42,
+          "z_margem": -0.39
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.9,
+          "z_margem": -0.89
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.86,
+          "z_margem": -0.84
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -0.92,
+          "z_margem": -0.89
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -0.96,
+          "z_margem": -0.95
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -0.93,
+          "z_margem": -0.91
+        }
+      ]
+    },
+    {
+      "depto": "BISCOITO",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 1.85,
+          "z_margem": 1.79
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 3.95,
+          "z_margem": 3.94
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.33,
+          "z_margem": 0.42
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.3,
+          "z_margem": -0.27
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.7,
+          "z_margem": 0.68
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.19,
+          "z_margem": 0.21
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": 0.06,
+          "z_margem": 0.04
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.8,
+          "z_margem": 0.88
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.09,
+          "z_margem": 0.1
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.44,
+          "z_margem": -0.44
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.54,
+          "z_margem": 0.53
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": -0.05,
+          "z_margem": -0.24
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.52,
+          "z_margem": -0.5
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.25,
+          "z_margem": 0.21
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": -0.55,
+          "z_margem": -0.57
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.71,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.54,
+          "z_margem": -0.52
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.13,
+          "z_margem": 0.02
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.54,
+          "z_margem": -0.63
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.05,
+          "z_margem": -0.02
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.11,
+          "z_margem": -0.13
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": 0.27,
+          "z_margem": 0.28
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.86,
+          "z_margem": -0.85
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.68,
+          "z_margem": -0.63
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.74,
+          "z_margem": -0.77
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -0.94,
+          "z_margem": -0.97
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -0.81,
+          "z_margem": -0.77
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.02,
+          "z_margem": -1.04
+        }
+      ]
+    },
+    {
+      "depto": "BOMBONIERE",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": -1.03,
+          "z_margem": 0.29
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.41,
+          "z_margem": 0.95
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": -0.22,
+          "z_margem": 0.42
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.6,
+          "z_margem": 0.61
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": -0.63,
+          "z_margem": 0.33
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": -0.78,
+          "z_margem": 0.34
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 1.05,
+          "z_margem": -0.56
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 1.68,
+          "z_margem": -3.6
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.83,
+          "z_margem": -0.04
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": -0.0,
+          "z_margem": 0.32
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.68,
+          "z_margem": -0.01
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": 0.16,
+          "z_margem": -0.6
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": 0.9,
+          "z_margem": 0.11
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.43,
+          "z_margem": 0.4
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.55,
+          "z_margem": 0.4
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.83,
+          "z_margem": 0.32
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.83,
+          "z_margem": 0.32
+        }
+      ]
+    },
+    {
+      "depto": "DESCARTAVEIS",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": -0.01,
+          "z_margem": 0.23
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.98,
+          "z_margem": 2.91
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.86,
+          "z_margem": 0.42
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 0.47,
+          "z_margem": 0.57
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 1.32,
+          "z_margem": 1.55
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 3.14,
+          "z_margem": 3.14
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.54,
+          "z_margem": -0.61
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": -0.44,
+          "z_margem": -0.4
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.09,
+          "z_margem": 0.09
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.33,
+          "z_margem": -0.31
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": -0.24,
+          "z_margem": -0.19
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.03,
+          "z_margem": 0.01
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.63,
+          "z_margem": -0.55
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.52,
+          "z_margem": -0.77
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.26,
+          "z_margem": 0.29
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.51,
+          "z_margem": -0.5
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.43,
+          "z_margem": -0.33
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.52,
+          "z_margem": -0.55
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.08,
+          "z_margem": -0.29
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.62,
+          "z_margem": -0.54
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.61,
+          "z_margem": -0.53
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": 0.05,
+          "z_margem": 0.15
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.17,
+          "z_margem": -0.27
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.4,
+          "z_margem": -0.39
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.6,
+          "z_margem": -0.59
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -0.88,
+          "z_margem": -0.89
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -0.85,
+          "z_margem": -0.83
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -0.82,
+          "z_margem": -0.81
+        }
+      ]
+    },
+    {
+      "depto": "FRIOS",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 2.5,
+          "z_margem": 2.78
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 1.72,
+          "z_margem": 1.82
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.93,
+          "z_margem": 0.73
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 0.04,
+          "z_margem": -0.22
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 1.32,
+          "z_margem": 1.11
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 1.98,
+          "z_margem": 1.96
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.38,
+          "z_margem": -0.31
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.05,
+          "z_margem": 0.07
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.68,
+          "z_margem": 0.35
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.58,
+          "z_margem": -0.57
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.52,
+          "z_margem": 0.38
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.9,
+          "z_margem": 0.83
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.83,
+          "z_margem": -0.82
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": -0.0,
+          "z_margem": -0.1
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.39,
+          "z_margem": 0.71
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.46,
+          "z_margem": -0.22
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.76,
+          "z_margem": -0.58
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.58,
+          "z_margem": -0.46
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": 0.23,
+          "z_margem": 0.37
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.9,
+          "z_margem": -0.8
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.71,
+          "z_margem": -0.6
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.59,
+          "z_margem": -0.69
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.72,
+          "z_margem": -0.89
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.61,
+          "z_margem": -0.91
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.5,
+          "z_margem": -0.91
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.23,
+          "z_margem": -1.03
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.18,
+          "z_margem": -0.94
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.24,
+          "z_margem": -1.05
+        }
+      ]
+    },
+    {
+      "depto": "H.F.G",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 0.79,
+          "z_margem": 1.06
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 0.89,
+          "z_margem": 1.35
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": -0.1,
+          "z_margem": 0.29
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.65,
+          "z_margem": -0.34
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 1.02,
+          "z_margem": 1.24
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 1.9,
+          "z_margem": 1.78
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.27,
+          "z_margem": -0.16
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 2.01,
+          "z_margem": 2.01
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 1.72,
+          "z_margem": 1.5
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.34,
+          "z_margem": -0.34
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.19,
+          "z_margem": 0.18
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.61,
+          "z_margem": 0.45
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.48,
+          "z_margem": -0.47
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.97,
+          "z_margem": 0.63
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.5,
+          "z_margem": 0.27
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.09,
+          "z_margem": -0.19
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": 0.46,
+          "z_margem": 0.42
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": 0.44,
+          "z_margem": 0.29
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.52,
+          "z_margem": -0.51
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.11,
+          "z_margem": -0.24
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.59,
+          "z_margem": -0.7
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.65,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -1.19,
+          "z_margem": -1.23
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -1.01,
+          "z_margem": -1.07
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -1.1,
+          "z_margem": -1.11
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.44,
+          "z_margem": -1.45
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.49,
+          "z_margem": -1.47
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.45,
+          "z_margem": -1.42
+        }
+      ]
+    },
+    {
+      "depto": "LIMPEZA",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 2.05,
+          "z_margem": 2.0
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.48,
+          "z_margem": 2.69
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.11,
+          "z_margem": 0.01
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.59,
+          "z_margem": -0.61
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": -0.13,
+          "z_margem": -0.23
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": -0.43,
+          "z_margem": -0.38
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.11,
+          "z_margem": -0.22
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.76,
+          "z_margem": 0.65
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.85,
+          "z_margem": 0.69
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.05,
+          "z_margem": -0.22
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 1.02,
+          "z_margem": 0.79
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": -0.32,
+          "z_margem": -0.33
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": 0.14,
+          "z_margem": 0.02
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 1.0,
+          "z_margem": 0.8
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 1.7,
+          "z_margem": 1.62
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.89,
+          "z_margem": -0.79
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.69,
+          "z_margem": -0.69
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.71,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": 0.77,
+          "z_margem": 1.34
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.66,
+          "z_margem": -0.62
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": 0.29,
+          "z_margem": 0.48
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.35,
+          "z_margem": -0.32
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.81,
+          "z_margem": -0.73
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -1.13,
+          "z_margem": -1.07
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.88,
+          "z_margem": -0.87
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.26,
+          "z_margem": -1.19
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.22,
+          "z_margem": -1.15
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -0.94,
+          "z_margem": -0.91
+        }
+      ]
+    },
+    {
+      "depto": "MERCEARIA",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 1.07,
+          "z_margem": 1.22
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 3.49,
+          "z_margem": 3.36
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.41,
+          "z_margem": 0.28
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.46,
+          "z_margem": -0.45
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.67,
+          "z_margem": 0.66
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 1.05,
+          "z_margem": 1.27
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.3,
+          "z_margem": -0.5
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.51,
+          "z_margem": 0.37
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.6,
+          "z_margem": 0.57
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.3,
+          "z_margem": -0.33
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.6,
+          "z_margem": 0.63
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.84,
+          "z_margem": 1.01
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.42,
+          "z_margem": -0.45
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.46,
+          "z_margem": 0.44
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 1.05,
+          "z_margem": 1.02
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.46,
+          "z_margem": -0.53
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.45,
+          "z_margem": -0.44
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.38,
+          "z_margem": -0.37
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.3,
+          "z_margem": -0.25
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.5,
+          "z_margem": -0.44
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.62,
+          "z_margem": -0.61
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.2,
+          "z_margem": -0.13
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.96,
+          "z_margem": -0.91
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.89,
+          "z_margem": -0.84
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.66,
+          "z_margem": -0.73
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.28,
+          "z_margem": -1.28
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.31,
+          "z_margem": -1.34
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.26,
+          "z_margem": -1.22
+        }
+      ]
+    },
+    {
+      "depto": "PADARIA",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": -0.35,
+          "z_margem": 0.34
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 0.01,
+          "z_margem": 0.73
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": -0.6,
+          "z_margem": 0.07
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.46,
+          "z_margem": 0.23
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": -0.74,
+          "z_margem": -0.09
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.7,
+          "z_margem": 1.15
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": 1.38,
+          "z_margem": -1.97
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 3.41,
+          "z_margem": -2.43
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 1.41,
+          "z_margem": -2.41
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": 0.65,
+          "z_margem": 1.3
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.34,
+          "z_margem": 0.85
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.06,
+          "z_margem": 0.62
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.22,
+          "z_margem": 0.36
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.08,
+          "z_margem": 0.65
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.71,
+          "z_margem": 1.35
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.75,
+          "z_margem": -0.12
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.61,
+          "z_margem": 0.03
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.46,
+          "z_margem": 0.17
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.63,
+          "z_margem": -0.05
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.76,
+          "z_margem": -0.14
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.66,
+          "z_margem": -0.03
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.9,
+          "z_margem": -0.26
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.73,
+          "z_margem": -0.09
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.89,
+          "z_margem": -0.26
+        }
+      ]
+    },
+    {
+      "depto": "PADARIA2",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 1.84,
+          "z_margem": 1.84
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.08,
+          "z_margem": 2.1
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 1.45,
+          "z_margem": 1.41
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 0.01,
+          "z_margem": 0.16
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.95,
+          "z_margem": 0.88
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.2,
+          "z_margem": 0.28
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.71,
+          "z_margem": -0.74
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 0.14,
+          "z_margem": 0.21
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.25,
+          "z_margem": 0.17
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -1.25,
+          "z_margem": -1.22
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.32,
+          "z_margem": 0.36
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.05,
+          "z_margem": 0.02
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": 0.66,
+          "z_margem": 0.67
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.64,
+          "z_margem": 0.7
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.73,
+          "z_margem": 0.67
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.99,
+          "z_margem": -0.99
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.11,
+          "z_margem": -0.18
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": 0.38,
+          "z_margem": 0.43
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": 0.77,
+          "z_margem": 0.63
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.04,
+          "z_margem": -0.1
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": 0.16,
+          "z_margem": 0.21
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.12,
+          "z_margem": -0.14
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.51,
+          "z_margem": -0.44
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.89,
+          "z_margem": -0.93
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.76,
+          "z_margem": -0.75
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.72,
+          "z_margem": -1.72
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.93,
+          "z_margem": -1.95
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.59,
+          "z_margem": -1.62
+        }
+      ]
+    },
+    {
+      "depto": "PERFUMARIA",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 0.99,
+          "z_margem": 1.07
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 3.83,
+          "z_margem": 3.77
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.94,
+          "z_margem": 0.8
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.12,
+          "z_margem": -0.01
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 1.02,
+          "z_margem": 1.24
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.01,
+          "z_margem": 0.15
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.75,
+          "z_margem": -0.79
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": -0.27,
+          "z_margem": -0.36
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 0.24,
+          "z_margem": 0.16
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": 0.23,
+          "z_margem": 0.14
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": -0.29,
+          "z_margem": -0.5
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.1,
+          "z_margem": 0.0
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.24,
+          "z_margem": -0.26
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 1.27,
+          "z_margem": 1.28
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 0.84,
+          "z_margem": 0.76
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.86,
+          "z_margem": -0.87
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.32,
+          "z_margem": -0.34
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": -0.5,
+          "z_margem": -0.47
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.2,
+          "z_margem": -0.17
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.47,
+          "z_margem": -0.48
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.62,
+          "z_margem": -0.58
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": 0.25,
+          "z_margem": 0.41
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.89,
+          "z_margem": -0.89
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -0.79,
+          "z_margem": -0.73
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -0.62,
+          "z_margem": -0.6
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -0.93,
+          "z_margem": -0.93
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -0.8,
+          "z_margem": -0.77
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.05,
+          "z_margem": -1.04
+        }
+      ]
+    },
+    {
+      "depto": "SERVIÇOS",
+      "history": [
+        {
+          "data": "2024-12-19",
+          "z_faturamento": 1.22,
+          "z_margem": 1.22
+        },
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 0.87,
+          "z_margem": 0.88
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": 0.6,
+          "z_margem": 0.6
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": 0.02,
+          "z_margem": 0.03
+        },
+        {
+          "data": "2024-12-23",
+          "z_faturamento": 0.43,
+          "z_margem": 0.43
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 1.37,
+          "z_margem": 1.36
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": -0.21,
+          "z_margem": -0.21
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": 1.3,
+          "z_margem": 1.3
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 1.35,
+          "z_margem": 1.34
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": -0.42,
+          "z_margem": -0.42
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": 0.7,
+          "z_margem": 0.7
+        },
+        {
+          "data": "2024-12-31",
+          "z_faturamento": 0.99,
+          "z_margem": 0.99
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.26,
+          "z_margem": -0.26
+        },
+        {
+          "data": "2025-01-03",
+          "z_faturamento": 0.78,
+          "z_margem": 0.78
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": 1.83,
+          "z_margem": 1.84
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": -0.35,
+          "z_margem": -0.37
+        },
+        {
+          "data": "2025-01-06",
+          "z_faturamento": -0.4,
+          "z_margem": -0.4
+        },
+        {
+          "data": "2025-01-07",
+          "z_faturamento": 0.19,
+          "z_margem": 0.19
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.12,
+          "z_margem": -0.12
+        },
+        {
+          "data": "2025-01-09",
+          "z_faturamento": -0.56,
+          "z_margem": -0.55
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.59,
+          "z_margem": -0.58
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.63,
+          "z_margem": -0.63
+        },
+        {
+          "data": "2025-01-12",
+          "z_faturamento": -0.86,
+          "z_margem": -0.86
+        },
+        {
+          "data": "2025-01-13",
+          "z_faturamento": -1.15,
+          "z_margem": -1.15
+        },
+        {
+          "data": "2025-01-14",
+          "z_faturamento": -1.01,
+          "z_margem": -1.04
+        },
+        {
+          "data": "2025-01-15",
+          "z_faturamento": -1.62,
+          "z_margem": -1.62
+        },
+        {
+          "data": "2025-01-16",
+          "z_faturamento": -1.75,
+          "z_margem": -1.75
+        },
+        {
+          "data": "2025-01-17",
+          "z_faturamento": -1.71,
+          "z_margem": -1.71
+        }
+      ]
+    },
+    {
+      "depto": "UTILIDADES",
+      "history": [
+        {
+          "data": "2024-12-20",
+          "z_faturamento": 2.94,
+          "z_margem": 2.74
+        },
+        {
+          "data": "2024-12-21",
+          "z_faturamento": -0.67,
+          "z_margem": -0.64
+        },
+        {
+          "data": "2024-12-22",
+          "z_faturamento": -0.65,
+          "z_margem": -0.69
+        },
+        {
+          "data": "2024-12-24",
+          "z_faturamento": -0.67,
+          "z_margem": -0.64
+        },
+        {
+          "data": "2024-12-26",
+          "z_faturamento": 0.86,
+          "z_margem": 1.78
+        },
+        {
+          "data": "2024-12-27",
+          "z_faturamento": -0.57,
+          "z_margem": -0.53
+        },
+        {
+          "data": "2024-12-28",
+          "z_faturamento": 1.02,
+          "z_margem": 0.47
+        },
+        {
+          "data": "2024-12-29",
+          "z_faturamento": 0.18,
+          "z_margem": 0.09
+        },
+        {
+          "data": "2024-12-30",
+          "z_faturamento": -0.09,
+          "z_margem": -0.12
+        },
+        {
+          "data": "2025-01-02",
+          "z_faturamento": -0.47,
+          "z_margem": -0.39
+        },
+        {
+          "data": "2025-01-04",
+          "z_faturamento": -0.65,
+          "z_margem": -0.69
+        },
+        {
+          "data": "2025-01-05",
+          "z_faturamento": 0.45,
+          "z_margem": 0.14
+        },
+        {
+          "data": "2025-01-08",
+          "z_faturamento": -0.64,
+          "z_margem": -0.62
+        },
+        {
+          "data": "2025-01-10",
+          "z_faturamento": -0.34,
+          "z_margem": -0.32
+        },
+        {
+          "data": "2025-01-11",
+          "z_faturamento": -0.71,
+          "z_margem": -0.59
+        }
+      ]
+    },
+    {
+      "depto": "EMPRESA",
+      "history": [
+        {
+          "data": "2024-12-24",
+          "z_faturamento": 0.0,
+          "z_margem": 0.0
+        }
+      ]
+    }
+  ],
+  "quadrants": {
+    "median_volume": 1327.28,
+    "median_margem": 3555.4,
+    "lojas": [
+      {
+        "loja": "BELVEDERE",
+        "quantidade": 5803.77,
+        "margem": 16041.24
+      },
+      {
+        "loja": "PINHEIRAL",
+        "quantidade": 1327.28,
+        "margem": 3555.4
+      },
+      {
+        "loja": "RETIRO",
+        "quantidade": 30136.14,
+        "margem": 67496.98
+      },
+      {
+        "loja": "VILA RICA",
+        "quantidade": 242.07,
+        "margem": 771.37
+      },
+      {
+        "loja": "VOLDAC",
+        "quantidade": 311.34000000000003,
+        "margem": 654.5
+      }
+    ]
+  },
+  "correlation_network": {
+    "nodes": [
+      {
+        "id": "ATACADO"
+      },
+      {
+        "id": "AÇOUGUE"
+      },
+      {
+        "id": "AÇOUGUE2"
+      },
+      {
+        "id": "BEBIDAS"
+      },
+      {
+        "id": "BISCOITO"
+      },
+      {
+        "id": "BOMBONIERE"
+      },
+      {
+        "id": "DESCARTAVEIS"
+      },
+      {
+        "id": "EMPRESA"
+      },
+      {
+        "id": "FRIOS"
+      },
+      {
+        "id": "H.F.G"
+      },
+      {
+        "id": "LIMPEZA"
+      },
+      {
+        "id": "MERCEARIA"
+      },
+      {
+        "id": "PADARIA"
+      },
+      {
+        "id": "PADARIA2"
+      },
+      {
+        "id": "PERFUMARIA"
+      },
+      {
+        "id": "SERVIÇOS"
+      },
+      {
+        "id": "UTILIDADES"
+      }
+    ],
+    "links": [
+      {
+        "source": "ATACADO",
+        "target": "AÇOUGUE",
+        "r": 0.762
+      },
+      {
+        "source": "ATACADO",
+        "target": "AÇOUGUE2",
+        "r": 0.773
+      },
+      {
+        "source": "ATACADO",
+        "target": "BEBIDAS",
+        "r": 0.791
+      },
+      {
+        "source": "ATACADO",
+        "target": "BISCOITO",
+        "r": 0.787
+      },
+      {
+        "source": "ATACADO",
+        "target": "BOMBONIERE",
+        "r": 0.763
+      },
+      {
+        "source": "ATACADO",
+        "target": "DESCARTAVEIS",
+        "r": 0.857
+      },
+      {
+        "source": "ATACADO",
+        "target": "EMPRESA",
+        "r": 0.112
+      },
+      {
+        "source": "ATACADO",
+        "target": "FRIOS",
+        "r": 0.812
+      },
+      {
+        "source": "ATACADO",
+        "target": "H.F.G",
+        "r": 0.628
+      },
+      {
+        "source": "ATACADO",
+        "target": "LIMPEZA",
+        "r": 0.793
+      },
+      {
+        "source": "ATACADO",
+        "target": "MERCEARIA",
+        "r": 0.702
+      },
+      {
+        "source": "ATACADO",
+        "target": "PADARIA",
+        "r": 0.55
+      },
+      {
+        "source": "ATACADO",
+        "target": "PADARIA2",
+        "r": 0.801
+      },
+      {
+        "source": "ATACADO",
+        "target": "PERFUMARIA",
+        "r": 0.779
+      },
+      {
+        "source": "ATACADO",
+        "target": "SERVIÇOS",
+        "r": 0.808
+      },
+      {
+        "source": "ATACADO",
+        "target": "UTILIDADES",
+        "r": 0.255
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "AÇOUGUE2",
+        "r": 0.87
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "BEBIDAS",
+        "r": 0.88
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "BISCOITO",
+        "r": 0.883
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "BOMBONIERE",
+        "r": 0.785
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "DESCARTAVEIS",
+        "r": 0.65
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "EMPRESA",
+        "r": 0.05
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "FRIOS",
+        "r": 0.861
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "H.F.G",
+        "r": 0.686
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "LIMPEZA",
+        "r": 0.861
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "MERCEARIA",
+        "r": 0.714
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "PADARIA",
+        "r": 0.617
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "PADARIA2",
+        "r": 0.88
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "PERFUMARIA",
+        "r": 0.78
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "SERVIÇOS",
+        "r": 0.864
+      },
+      {
+        "source": "AÇOUGUE",
+        "target": "UTILIDADES",
+        "r": 0.149
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "BEBIDAS",
+        "r": 0.928
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "BISCOITO",
+        "r": 0.923
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "BOMBONIERE",
+        "r": 0.893
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "DESCARTAVEIS",
+        "r": 0.684
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "EMPRESA",
+        "r": -0.017
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "FRIOS",
+        "r": 0.913
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "H.F.G",
+        "r": 0.7
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "LIMPEZA",
+        "r": 0.827
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "MERCEARIA",
+        "r": 0.738
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "PADARIA",
+        "r": 0.761
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "PADARIA2",
+        "r": 0.903
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "PERFUMARIA",
+        "r": 0.708
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "SERVIÇOS",
+        "r": 0.896
+      },
+      {
+        "source": "AÇOUGUE2",
+        "target": "UTILIDADES",
+        "r": 0.22
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "BISCOITO",
+        "r": 0.903
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "BOMBONIERE",
+        "r": 0.865
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "DESCARTAVEIS",
+        "r": 0.714
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "EMPRESA",
+        "r": 0.046
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "FRIOS",
+        "r": 0.905
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "H.F.G",
+        "r": 0.763
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "LIMPEZA",
+        "r": 0.864
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "MERCEARIA",
+        "r": 0.742
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "PADARIA",
+        "r": 0.694
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "PADARIA2",
+        "r": 0.903
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "PERFUMARIA",
+        "r": 0.745
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "SERVIÇOS",
+        "r": 0.92
+      },
+      {
+        "source": "BEBIDAS",
+        "target": "UTILIDADES",
+        "r": 0.233
+      },
+      {
+        "source": "BISCOITO",
+        "target": "BOMBONIERE",
+        "r": 0.874
+      },
+      {
+        "source": "BISCOITO",
+        "target": "DESCARTAVEIS",
+        "r": 0.639
+      },
+      {
+        "source": "BISCOITO",
+        "target": "EMPRESA",
+        "r": -0.03
+      },
+      {
+        "source": "BISCOITO",
+        "target": "FRIOS",
+        "r": 0.929
+      },
+      {
+        "source": "BISCOITO",
+        "target": "H.F.G",
+        "r": 0.795
+      },
+      {
+        "source": "BISCOITO",
+        "target": "LIMPEZA",
+        "r": 0.895
+      },
+      {
+        "source": "BISCOITO",
+        "target": "MERCEARIA",
+        "r": 0.793
+      },
+      {
+        "source": "BISCOITO",
+        "target": "PADARIA",
+        "r": 0.769
+      },
+      {
+        "source": "BISCOITO",
+        "target": "PADARIA2",
+        "r": 0.947
+      },
+      {
+        "source": "BISCOITO",
+        "target": "PERFUMARIA",
+        "r": 0.827
+      },
+      {
+        "source": "BISCOITO",
+        "target": "SERVIÇOS",
+        "r": 0.942
+      },
+      {
+        "source": "BISCOITO",
+        "target": "UTILIDADES",
+        "r": 0.288
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "DESCARTAVEIS",
+        "r": 0.611
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "EMPRESA",
+        "r": -0.008
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "FRIOS",
+        "r": 0.844
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "H.F.G",
+        "r": 0.577
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "LIMPEZA",
+        "r": 0.733
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "MERCEARIA",
+        "r": 0.74
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "PADARIA",
+        "r": 0.694
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "PADARIA2",
+        "r": 0.799
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "PERFUMARIA",
+        "r": 0.683
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "SERVIÇOS",
+        "r": 0.797
+      },
+      {
+        "source": "BOMBONIERE",
+        "target": "UTILIDADES",
+        "r": 0.165
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "EMPRESA",
+        "r": 0.081
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "FRIOS",
+        "r": 0.69
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "H.F.G",
+        "r": 0.492
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "LIMPEZA",
+        "r": 0.676
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "MERCEARIA",
+        "r": 0.572
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "PADARIA",
+        "r": 0.463
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "PADARIA2",
+        "r": 0.668
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "PERFUMARIA",
+        "r": 0.674
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "SERVIÇOS",
+        "r": 0.672
+      },
+      {
+        "source": "DESCARTAVEIS",
+        "target": "UTILIDADES",
+        "r": 0.205
+      },
+      {
+        "source": "EMPRESA",
+        "target": "FRIOS",
+        "r": 0.044
+      },
+      {
+        "source": "EMPRESA",
+        "target": "H.F.G",
+        "r": -0.024
+      },
+      {
+        "source": "EMPRESA",
+        "target": "LIMPEZA",
+        "r": 0.085
+      },
+      {
+        "source": "EMPRESA",
+        "target": "MERCEARIA",
+        "r": 0.047
+      },
+      {
+        "source": "EMPRESA",
+        "target": "PADARIA",
+        "r": -0.04
+      },
+      {
+        "source": "EMPRESA",
+        "target": "PADARIA2",
+        "r": 0.022
+      },
+      {
+        "source": "EMPRESA",
+        "target": "PERFUMARIA",
+        "r": 0.061
+      },
+      {
+        "source": "EMPRESA",
+        "target": "SERVIÇOS",
+        "r": 0.003
+      },
+      {
+        "source": "EMPRESA",
+        "target": "UTILIDADES",
+        "r": 0.025
+      },
+      {
+        "source": "FRIOS",
+        "target": "H.F.G",
+        "r": 0.774
+      },
+      {
+        "source": "FRIOS",
+        "target": "LIMPEZA",
+        "r": 0.865
+      },
+      {
+        "source": "FRIOS",
+        "target": "MERCEARIA",
+        "r": 0.843
+      },
+      {
+        "source": "FRIOS",
+        "target": "PADARIA",
+        "r": 0.763
+      },
+      {
+        "source": "FRIOS",
+        "target": "PADARIA2",
+        "r": 0.931
+      },
+      {
+        "source": "FRIOS",
+        "target": "PERFUMARIA",
+        "r": 0.791
+      },
+      {
+        "source": "FRIOS",
+        "target": "SERVIÇOS",
+        "r": 0.92
+      },
+      {
+        "source": "FRIOS",
+        "target": "UTILIDADES",
+        "r": 0.253
+      },
+      {
+        "source": "H.F.G",
+        "target": "LIMPEZA",
+        "r": 0.743
+      },
+      {
+        "source": "H.F.G",
+        "target": "MERCEARIA",
+        "r": 0.598
+      },
+      {
+        "source": "H.F.G",
+        "target": "PADARIA",
+        "r": 0.591
+      },
+      {
+        "source": "H.F.G",
+        "target": "PADARIA2",
+        "r": 0.814
+      },
+      {
+        "source": "H.F.G",
+        "target": "PERFUMARIA",
+        "r": 0.633
+      },
+      {
+        "source": "H.F.G",
+        "target": "SERVIÇOS",
+        "r": 0.886
+      },
+      {
+        "source": "H.F.G",
+        "target": "UTILIDADES",
+        "r": 0.418
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "MERCEARIA",
+        "r": 0.76
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "PADARIA",
+        "r": 0.64
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "PADARIA2",
+        "r": 0.907
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "PERFUMARIA",
+        "r": 0.918
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "SERVIÇOS",
+        "r": 0.9
+      },
+      {
+        "source": "LIMPEZA",
+        "target": "UTILIDADES",
+        "r": 0.311
+      },
+      {
+        "source": "MERCEARIA",
+        "target": "PADARIA",
+        "r": 0.587
+      },
+      {
+        "source": "MERCEARIA",
+        "target": "PADARIA2",
+        "r": 0.739
+      },
+      {
+        "source": "MERCEARIA",
+        "target": "PERFUMARIA",
+        "r": 0.76
+      },
+      {
+        "source": "MERCEARIA",
+        "target": "SERVIÇOS",
+        "r": 0.735
+      },
+      {
+        "source": "MERCEARIA",
+        "target": "UTILIDADES",
+        "r": 0.164
+      },
+      {
+        "source": "PADARIA",
+        "target": "PADARIA2",
+        "r": 0.75
+      },
+      {
+        "source": "PADARIA",
+        "target": "PERFUMARIA",
+        "r": 0.583
+      },
+      {
+        "source": "PADARIA",
+        "target": "SERVIÇOS",
+        "r": 0.727
+      },
+      {
+        "source": "PADARIA",
+        "target": "UTILIDADES",
+        "r": 0.307
+      },
+      {
+        "source": "PADARIA2",
+        "target": "PERFUMARIA",
+        "r": 0.812
+      },
+      {
+        "source": "PADARIA2",
+        "target": "SERVIÇOS",
+        "r": 0.971
+      },
+      {
+        "source": "PADARIA2",
+        "target": "UTILIDADES",
+        "r": 0.302
+      },
+      {
+        "source": "PERFUMARIA",
+        "target": "SERVIÇOS",
+        "r": 0.796
+      },
+      {
+        "source": "PERFUMARIA",
+        "target": "UTILIDADES",
+        "r": 0.28
+      },
+      {
+        "source": "SERVIÇOS",
+        "target": "UTILIDADES",
+        "r": 0.335
+      }
+    ]
+  },
+  "forecast": {
+    "recent_history": [
+      {
+        "data": "2025-01-04",
+        "faturamento": 16257.4,
+        "ma_3": 11223.95,
+        "ma_7": 10017.04
+      },
+      {
+        "data": "2025-01-05",
+        "faturamento": 6101.22,
+        "ma_3": 11316.43,
+        "ma_7": 9621.7
+      },
+      {
+        "data": "2025-01-06",
+        "faturamento": 8385.57,
+        "ma_3": 10248.06,
+        "ma_7": 8863.09
+      },
+      {
+        "data": "2025-01-07",
+        "faturamento": 7275.12,
+        "ma_3": 7253.97,
+        "ma_7": 7919.11
+      },
+      {
+        "data": "2025-01-08",
+        "faturamento": 8148.9,
+        "ma_3": 7936.53,
+        "ma_7": 9083.24
+      },
+      {
+        "data": "2025-01-09",
+        "faturamento": 5772.63,
+        "ma_3": 7065.55,
+        "ma_7": 9075.93
+      },
+      {
+        "data": "2025-01-10",
+        "faturamento": 5680.39,
+        "ma_3": 6533.97,
+        "ma_7": 8231.6
+      },
+      {
+        "data": "2025-01-11",
+        "faturamento": 7397.85,
+        "ma_3": 6283.62,
+        "ma_7": 6965.95
+      },
+      {
+        "data": "2025-01-12",
+        "faturamento": 4053.95,
+        "ma_3": 5710.73,
+        "ma_7": 6673.49
+      },
+      {
+        "data": "2025-01-13",
+        "faturamento": 3702.41,
+        "ma_3": 5051.4,
+        "ma_7": 6004.46
+      },
+      {
+        "data": "2025-01-14",
+        "faturamento": 4472.67,
+        "ma_3": 4076.34,
+        "ma_7": 5604.11
+      },
+      {
+        "data": "2025-01-15",
+        "faturamento": 923.54,
+        "ma_3": 3032.87,
+        "ma_7": 4571.92
+      },
+      {
+        "data": "2025-01-16",
+        "faturamento": 945.7,
+        "ma_3": 2113.97,
+        "ma_7": 3882.36
+      },
+      {
+        "data": "2025-01-17",
+        "faturamento": 1042.69,
+        "ma_3": 970.64,
+        "ma_7": 3219.83
+      }
+    ],
+    "next_7_days": [
+      {
+        "data": "2025-01-18",
+        "faturamento_predito": 4041.26
+      },
+      {
+        "data": "2025-01-19",
+        "faturamento_predito": 2311.55
+      },
+      {
+        "data": "2025-01-20",
+        "faturamento_predito": 2806.68
+      },
+      {
+        "data": "2025-01-21",
+        "faturamento_predito": 3878.56
+      },
+      {
+        "data": "2025-01-22",
+        "faturamento_predito": 1655.09
+      },
+      {
+        "data": "2025-01-23",
+        "faturamento_predito": 799.66
+      },
+      {
+        "data": "2025-01-24",
+        "faturamento_predito": 1935.37
+      }
+    ]
+  }
+}

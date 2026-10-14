@@ -1,0 +1,80 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+*.mp4
+
+# debug & logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files & secrets
+.env*
+*firebase-adminsdk*.json
+service-account*.json
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# backups & scratch checkpoints
+.backup_checkpoints/
+.build_cache/
+backup_*/
+scratch/
+
+# large data files (>100MB exceeds GitHub limit; compressed .gz are preserved)
+data/supermarket/products_monthly.json
+*.parquet
+.backup-dre-data.json
+
+# temporary debug scripts and outputs
+fix_*.js
+inject_*.js
+restore_*.js
+revert_*.js
+check_*.html
+check_*.js
+*.txt
+old.css
+old_*.html
+check.html
+error.html
+final_kpi_script.js
+find_bounds.js
+force_style.js
+print_end.js
+replace_kpis.js
+rollback.js
+upgrade_page_v3.js
+write_appshell.js
+cleanup.js
+parse_error.py
+
+
