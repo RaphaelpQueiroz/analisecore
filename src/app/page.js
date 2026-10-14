@@ -333,38 +333,23 @@ function DashboardInner() {
     [chartData]
   );
 
-  if (!dataInicio || !dataFim) return null;
-  if (loading) return (
-    <div style={{ height: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <div style={{ position: 'relative', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="core-loader-spin" style={{
-          position: 'absolute', inset: 0,
-          border: '2.5px solid rgba(37,99,235,0.1)',
-          borderTopColor: '#2563eb', borderRightColor: '#0284c7', borderRadius: '50%'
-        }} />
-        <img src="/images/core-icon-perfect.png" alt="Análises Core" className="core-loader-icon"
-          style={{ width: 38, height: 38, objectFit: 'contain' }} />
-      </div>
-      <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b' }}>Carregando dados...</span>
-    </div>
-  );
-  if (!data) return <div style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>Nenhum dado encontrado para o período.</div>;
-
-  // ── Derived data ──
-  const kpis = data.kpis || {};
-  const rawDepts = [...(data.charts?.marcasDonut || [])].sort((a, b) => (b.value || 0) - (a.value || 0));
-  const totalDeptsVal = rawDepts.reduce((s, i) => s + (i.value || 0), 0);
-  const allDeptsData = rawDepts.map((d, idx) => ({
-    name: d.name || 'Outros',
-    fullName: d.name,
-    value: d.value,
-    pct: totalDeptsVal > 0 ? (d.value / totalDeptsVal) * 100 : 0,
-    pctFormatted: `${totalDeptsVal > 0 ? ((d.value / totalDeptsVal) * 100).toFixed(1) : 0}%`,
-    cmv: d.cmv || 0, mc: d.mc || 0,
-    margemContribuicaoPerc: d.margemContribuicaoPerc || (d.value > 0 ? (((d.value - (d.cmv || 0))) / d.value) * 100 : 0),
-    color: DEPT_COLORS[idx % DEPT_COLORS.length],
-  }));
-  const stores = data.tables?.vendedores || data.charts?.topVendedores || [];
+  // ── Derived data (safe when data is null) ──
+  const kpis = data?.kpis || {};
+  const allDeptsData = useMemo(() => {
+    const raw = [...(data?.charts?.marcasDonut || [])].sort((a, b) => (b.value || 0) - (a.value || 0));
+    const total = raw.reduce((s, i) => s + (i.value || 0), 0);
+    return raw.map((d, idx) => ({
+      name: d.name || 'Outros',
+      fullName: d.name,
+      value: d.value,
+      pct: total > 0 ? (d.value / total) * 100 : 0,
+      pctFormatted: `${total > 0 ? ((d.value / total) * 100).toFixed(1) : 0}%`,
+      cmv: d.cmv || 0, mc: d.mc || 0,
+      margemContribuicaoPerc: d.margemContribuicaoPerc || (d.value > 0 ? (((d.value - (d.cmv || 0))) / d.value) * 100 : 0),
+      color: DEPT_COLORS[idx % DEPT_COLORS.length],
+    }));
+  }, [data?.charts?.marcasDonut]);
+  const stores = data?.tables?.vendedores || data?.charts?.topVendedores || [];
 
   // Sparkline data (12 months receita)
   const sparklineData = useMemo(() => {
@@ -530,6 +515,23 @@ function DashboardInner() {
   const daysCount = crossPeriod ? 1 : Math.max(chartData.length, 1);
   const margemPerc = kpis.margemContribuicaoPerc || 0;
   const efficiencyScore = Math.min(Math.max(((margemPerc / 35) * 100), 0), 100);
+
+  if (!dataInicio || !dataFim) return null;
+  if (loading) return (
+    <div style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+      <div style={{ position: 'relative', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="core-loader-spin" style={{
+          position: 'absolute', inset: 0,
+          border: '2.5px solid rgba(37,99,235,0.1)',
+          borderTopColor: '#2563eb', borderRightColor: '#0284c7', borderRadius: '50%'
+        }} />
+        <img src="/images/core-icon-perfect.png" alt="Análises Core" className="core-loader-icon"
+          style={{ width: 38, height: 38, objectFit: 'contain' }} />
+      </div>
+      <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b' }}>Carregando dados...</span>
+    </div>
+  );
+  if (!data) return <div style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>Nenhum dado encontrado para o período.</div>;
 
   return (
     <div style={{ minHeight: '100vh', background: '#EEF2F9', padding: '0 0 40px' }}>
