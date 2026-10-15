@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { parseISO, format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { motion, AnimatePresence } from 'framer-motion';
 import ModalKpiDetail from './components/ModalKpiDetail';
 
 // ─── Lazy-loaded premium components ───
@@ -105,12 +106,62 @@ const aggregateChartData = (rawData, view) => {
   return Object.values(grouped).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
 };
 
-// ─── PREMIUM KPI CARD ───
-function PremiumKpiCard({ title, value, subtitle, badge, badgePositive = true, icon: Icon, gradFrom, gradTo, shadowColor, sparkData, bulletValue, bulletTarget, gaugeValue, footerLeft, footerRight, selected, onClick }) {
-  const isSelected = selected;
+// ─── Animated KPI Value ───
+function AnimatedValue({ value, className = '' }) {
   return (
-    <div
-      onClick={onClick}
+    <motion.span
+      key={value}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      className={className}
+    >
+      {value}
+    </motion.span>
+  );
+}
+
+// ─── Ripple Hook ───
+function useRipple() {
+  const ref = useRef(null);
+  const handleRipple = useCallback((e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = e.clientX - rect.left - size / 2;
+    const y = e.clientY - rect.top - size / 2;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+    el.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+  }, []);
+  return { ref, handleRipple };
+}
+
+// ─── PREMIUM KPI CARD ───
+function PremiumKpiCard({ title, value, subtitle, badge, badgePositive = true, icon: Icon, gradFrom, gradTo, shadowColor, sparkData, bulletValue, bulletTarget, gaugeValue, footerLeft, footerRight, selected, onClick, delay = 0 }) {
+  const isSelected = selected;
+  const { ref: rippleRef, handleRipple } = useRipple();
+  const [iconHovered, setIconHovered] = useState(false);
+  const [zapTime, setZapTime] = useState(0);
+
+  return (
+    <motion.div
+      ref={rippleRef}
+      className="ripple-container"
+      onClick={(e) => { handleRipple(e); onClick && onClick(e); }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={{
+        y: -5,
+        boxShadow: isSelected
+          ? '0 20px 50px rgba(37,99,235,0.18), 0 0 0 4px rgba(37,99,235,0.12)'
+          : '0 20px 50px rgba(15,23,42,0.10)',
+      }}
+      whileTap={{ scale: 0.98 }}
       style={{
         background: 'white',
         borderRadius: 20,
@@ -120,7 +171,6 @@ function PremiumKpiCard({ title, value, subtitle, badge, badgePositive = true, i
           : '0 8px 30px rgba(15,23,42,0.04)',
         padding: '16px 18px',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
         display: 'flex',
         flexDirection: 'column',
         gap: 10,
@@ -128,42 +178,71 @@ function PremiumKpiCard({ title, value, subtitle, badge, badgePositive = true, i
         overflow: 'hidden',
       }}
     >
+      {/* Selected indicator stripe */}
+      <AnimatePresence>
+        {isSelected && (
+          <motion.div
+            initial={{ scaleY: 0 }}
+            animate={{ scaleY: 1 }}
+            exit={{ scaleY: 0 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0, width: 3,
+              background: `linear-gradient(to bottom, ${gradFrom}, ${gradTo})`,
+              borderRadius: '20px 0 0 20px',
+              transformOrigin: 'top',
+            }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* Header row */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{
-            width: 36, height: 36, borderRadius: 12,
-            background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})`,
-            boxShadow: `0 4px 12px ${shadowColor}`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
+          <motion.div
+            onHoverStart={() => setIconHovered(true)}
+            onHoverEnd={() => setIconHovered(false)}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            style={{
+              width: 36, height: 36, borderRadius: 12,
+              background: `linear-gradient(135deg, ${gradFrom}, ${gradTo})`,
+              boxShadow: `0 4px 12px ${shadowColor}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >
             {Icon && <Icon size={16} color="white" />}
-          </div>
+          </motion.div>
           <div>
             <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', lineHeight: 1 }}>{title}</div>
             {subtitle && <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 2 }}>{subtitle}</div>}
           </div>
         </div>
         {badge !== undefined && (
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 3,
-            padding: '3px 8px', borderRadius: 20,
-            fontSize: 10, fontWeight: 700,
-            background: badgePositive ? '#ecfdf5' : '#fef2f2',
-            color: badgePositive ? '#059669' : '#dc2626',
-            border: badgePositive ? '1px solid rgba(167,243,208,0.6)' : '1px solid rgba(252,165,165,0.6)',
-            whiteSpace: 'nowrap',
-          }}>
+          <motion.span
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 500, damping: 20, delay: delay + 0.2 }}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 3,
+              padding: '3px 8px', borderRadius: 20,
+              fontSize: 10, fontWeight: 700,
+              background: badgePositive ? '#ecfdf5' : '#fef2f2',
+              color: badgePositive ? '#059669' : '#dc2626',
+              border: badgePositive ? '1px solid rgba(167,243,208,0.6)' : '1px solid rgba(252,165,165,0.6)',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {badgePositive ? <TrendingUp size={9} /> : <TrendingDown size={9} />}
             {badge}
-          </span>
+          </motion.span>
         )}
       </div>
 
       {/* Value */}
       <div style={{ fontSize: 30, fontWeight: 900, color: '#0f172a', letterSpacing: '-1px', lineHeight: 1 }}>
-        {value}
+        <AnimatedValue value={value} />
       </div>
 
       {/* Bottom row: footer text + visual */}
@@ -178,21 +257,27 @@ function PremiumKpiCard({ title, value, subtitle, badge, badgePositive = true, i
         )}
         {gaugeValue !== undefined && <SemiGauge value={gaugeValue} size={72} />}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
 // ─── SECTION CARD WRAPPER ───
-function SectionCard({ title, subtitle, badge, children, style }) {
+function SectionCard({ title, subtitle, badge, children, style, delay = 0 }) {
   return (
-    <div style={{
-      background: 'white',
-      borderRadius: 20,
-      border: '1px solid #f1f5f9',
-      boxShadow: '0 8px 30px rgba(15,23,42,0.04)',
-      padding: '18px 20px',
-      ...style,
-    }}>
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
+      whileHover={{ boxShadow: '0 16px 48px rgba(15,23,42,0.08)' }}
+      style={{
+        background: 'white',
+        borderRadius: 20,
+        border: '1px solid #f1f5f9',
+        boxShadow: '0 8px 30px rgba(15,23,42,0.04)',
+        padding: '18px 20px',
+        ...style,
+      }}
+    >
       <div style={{ marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>{title}</div>
@@ -206,13 +291,133 @@ function SectionCard({ title, subtitle, badge, children, style }) {
         {subtitle && <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>{subtitle}</div>}
       </div>
       {children}
-    </div>
+    </motion.div>
+  );
+}
+
+// ─── ANIMATED NAVBAR ───
+function PremiumNavbar({ synergyOpen, setSynergyOpen, selectedCards }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [zapAnimate, setZapAnimate] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Auto-wobble Zap every 4s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setZapAnimate(true);
+      setTimeout(() => setZapAnimate(false), 700);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ y: -48, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+      style={{
+        position: 'sticky', top: 0, zIndex: 100,
+        height: 48,
+        background: scrolled
+          ? 'linear-gradient(90deg, #1e3fa8 0%, #2453DF 40%, #2B5CE7 60%, #2453DF 100%)'
+          : 'linear-gradient(90deg, #2453DF 0%, #2B5CE7 50%, #2453DF 100%)',
+        display: 'flex', alignItems: 'center',
+        padding: '0 20px', gap: 12,
+        boxShadow: scrolled
+          ? '0 4px 24px rgba(36,83,223,0.4)'
+          : '0 2px 16px rgba(36,83,223,0.25)',
+        transition: 'background 0.3s ease, box-shadow 0.3s ease',
+      }}
+    >
+      {/* Logo badge */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          background: 'rgba(255,255,255,0.15)',
+          border: '1px solid rgba(255,255,255,0.2)',
+          borderRadius: 10, padding: '4px 12px',
+          cursor: 'pointer',
+        }}
+      >
+        <motion.img
+          src="/images/core-icon-perfect.png"
+          alt="Core"
+          style={{ width: 20, height: 20, objectFit: 'contain' }}
+          animate={{ rotate: [0, 5, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <span style={{ fontSize: 12, fontWeight: 800, color: 'white', letterSpacing: '-0.3px' }}>People Intelligence</span>
+      </motion.div>
+
+      {/* Center toolbar */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+        {[BarChart2, Filter, Download, Bell, Settings].map((Icon, i) => (
+          <motion.button
+            key={i}
+            whileHover={{ scale: 1.15, background: 'rgba(255,255,255,0.2)' }}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              width: 32, height: 32, borderRadius: 8,
+              background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', color: 'rgba(255,255,255,0.8)',
+            }}
+          >
+            <Icon size={14} />
+          </motion.button>
+        ))}
+
+        {/* Synergy button */}
+        <motion.button
+          onClick={() => setSynergyOpen(true)}
+          whileHover={{ scale: 1.05, background: 'rgba(255,255,255,0.28)' }}
+          whileTap={{ scale: 0.96 }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 6,
+            background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.35)',
+            borderRadius: 8, padding: '6px 12px',
+            color: 'white', fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          }}
+        >
+          <motion.span
+            animate={zapAnimate ? { rotate: [0, -15, 15, -8, 6, 0] } : {}}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'flex' }}
+          >
+            <Zap size={13} />
+          </motion.span>
+          Sinergia ({selectedCards.length > 0 ? selectedCards.length : 4})
+        </motion.button>
+      </div>
+
+      {/* Live indicator */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>
+        <motion.span
+          animate={{ scale: [1, 1.6, 1], opacity: [1, 0.5, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: '#34D399', display: 'inline-block',
+          }}
+        />
+        Ao vivo · atualizado agora
+      </div>
+    </motion.div>
   );
 }
 
 // ─── MAIN DASHBOARD ───
 function DashboardInner() {
   const searchParams = useSearchParams();
+
+  // ── ALL HOOKS FIRST (before any conditional return) ──
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedModalKpi, setSelectedModalKpi] = useState(null);
@@ -224,7 +429,6 @@ function DashboardInner() {
   const [crossLoja, setCrossLoja] = useState(null);
   const [crossPeriod, setCrossPeriod] = useState(null);
   const crossCacheRef = useRef(new Map());
-  const othersDeptoNamesRef = useRef([]);
   const [chartMounted, setChartMounted] = useState(false);
 
   const dataInicio = searchParams.get('dataInicio');
@@ -334,9 +538,9 @@ function DashboardInner() {
     [chartData]
   );
 
-  // ── Derived data (safe when data is null) ──
   const charts = data?.charts || {};
   const kpis = data?.kpis || {};
+
   const allDeptsData = useMemo(() => {
     const raw = [...(data?.charts?.marcasDonut || [])].sort((a, b) => (b.value || 0) - (a.value || 0));
     const total = raw.reduce((s, i) => s + (i.value || 0), 0);
@@ -351,9 +555,9 @@ function DashboardInner() {
       color: DEPT_COLORS[idx % DEPT_COLORS.length],
     }));
   }, [data?.charts?.marcasDonut]);
+
   const stores = data?.tables?.vendedores || data?.charts?.topVendedores || [];
 
-  // Sparkline data (12 months receita)
   const sparklineData = useMemo(() => {
     const area = data?.charts?.area || [];
     const byMonth = {};
@@ -378,7 +582,6 @@ function DashboardInner() {
     return Object.values(byMonth).slice(-12);
   }, [data?.charts?.area]);
 
-  // Stacked bar data for wide KPI card (12m CMV vs Margem)
   const stackedBarData = useMemo(() => {
     const area = data?.charts?.area || [];
     const byMonth = {};
@@ -403,7 +606,6 @@ function DashboardInner() {
     }));
   }, [data?.charts?.area]);
 
-  // Projection chart data
   const projectionData = useMemo(() => {
     const byMonth = {};
     (data?.charts?.area || []).forEach(pt => {
@@ -415,7 +617,7 @@ function DashboardInner() {
     const sorted = Object.entries(byMonth).sort((a, b) => a[0].localeCompare(b[0]));
     const recent = sorted.slice(-14);
     const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-    return recent.map(([ym, v], i) => {
+    return recent.map(([ym, v]) => {
       const [y, m] = ym.split('-');
       return {
         value: v,
@@ -428,7 +630,6 @@ function DashboardInner() {
   const todayIdx = Math.max(0, Math.floor(projectionData.length * 0.75));
   const metaReceita = avgReceita * 12 * 1.05;
 
-  // Waffle segments from departments
   const waffleSegments = useMemo(() => {
     if (!allDeptsData.length) return [
       { label: 'Curva A', pct: 45, color: '#2563EB' },
@@ -437,7 +638,6 @@ function DashboardInner() {
       { label: 'Outros', pct: 9, color: '#FCD34D' },
     ];
     const top3 = allDeptsData.slice(0, 3);
-    const others = allDeptsData.slice(3).reduce((s, d) => s + d.pct, 0);
     const pcts = top3.map(d => Math.round(d.pct));
     const sum = pcts.reduce((s, v) => s + v, 0);
     const othersRounded = 100 - sum;
@@ -449,7 +649,6 @@ function DashboardInner() {
     ];
   }, [allDeptsData]);
 
-  // Diverging bars (entries vs exits)
   const divergingData = useMemo(() => {
     const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const byMonth = {};
@@ -472,30 +671,23 @@ function DashboardInner() {
     });
   }, [data?.charts?.area]);
 
-  // Sankey stages from departments and stores
   const sankeyStages = useMemo(() => {
     const topDepts = allDeptsData.slice(0, 6);
-    const topStores = stores.slice(0, 5);
-    const totalFat = allDeptsData.reduce((s, d) => s + d.value, 0) || 1;
     return [
-      // Origin
       [{ label: 'Faturamento Total', value: 100, color: '#2563EB' }],
-      // Middle: departments
       topDepts.map((d, i) => ({
         label: d.name.length > 10 ? d.name.substring(0, 10) + '.' : d.name,
         value: Math.max(d.pct, 2),
         color: DEPT_COLORS[i % DEPT_COLORS.length],
       })),
-      // Destination
       [
         { label: 'Margem Retida', value: kpis.margemContribuicaoPerc || 30, color: '#10B981' },
         { label: 'CMV / Custo', value: (kpis.receitaLiquida > 0 ? (kpis.cmvGeral / kpis.receitaLiquida) * 100 : 65), color: '#F59E0B' },
         { label: 'Impostos', value: 5, color: '#EF4444' },
       ],
     ];
-  }, [allDeptsData, stores, kpis]);
+  }, [allDeptsData, kpis]);
 
-  // Multi-ring donut (inner = Macro split, outer = top 5 depts)
   const donutInner = useMemo(() => {
     const fat = kpis.receitaLiquida || 1;
     const mc = kpis.margemContribuicao || 0;
@@ -518,92 +710,49 @@ function DashboardInner() {
   const margemPerc = kpis.margemContribuicaoPerc || 0;
   const efficiencyScore = Math.min(Math.max(((margemPerc / 35) * 100), 0), 100);
 
+  // ── CONDITIONAL RETURNS (after ALL hooks) ──
   if (!dataInicio || !dataFim) return null;
+
   if (loading) return (
     <div style={{ minHeight: '65vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <div style={{ position: 'relative', width: 64, height: 64, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <div className="core-loader-spin" style={{
-          position: 'absolute', inset: 0,
+      <motion.div
+        animate={{ rotate: 360 }}
+        transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
+        style={{
+          width: 64, height: 64, borderRadius: '50%',
           border: '2.5px solid rgba(37,99,235,0.1)',
-          borderTopColor: '#2563eb', borderRightColor: '#0284c7', borderRadius: '50%'
-        }} />
-        <img src="/images/core-icon-perfect.png" alt="Análises Core" className="core-loader-icon"
-          style={{ width: 38, height: 38, objectFit: 'contain' }} />
-      </div>
-      <span style={{ fontSize: 13, fontWeight: 600, color: '#64748b' }}>Carregando dados...</span>
+          borderTopColor: '#2563eb', borderRightColor: '#0284c7',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          position: 'relative',
+        }}
+      />
+      <motion.span
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 1.5, repeat: Infinity }}
+        style={{ fontSize: 13, fontWeight: 600, color: '#64748b' }}
+      >
+        Carregando dados...
+      </motion.span>
     </div>
   );
+
   if (!data) return <div style={{ padding: 40, textAlign: 'center', color: '#64748b' }}>Nenhum dado encontrado para o período.</div>;
 
   return (
     <div style={{ minHeight: '100vh', background: '#EEF2F9', padding: '0 0 40px' }}>
 
       {/* ── TOP NAVBAR ── */}
-      <div style={{
-        position: 'sticky', top: 0, zIndex: 100,
-        height: 48,
-        background: 'linear-gradient(90deg, #2453DF 0%, #2B5CE7 50%, #2453DF 100%)',
-        display: 'flex', alignItems: 'center',
-        padding: '0 20px', gap: 12,
-        boxShadow: '0 2px 16px rgba(36,83,223,0.25)',
-      }}>
-        {/* Logo badge */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 8,
-          background: 'rgba(255,255,255,0.15)',
-          border: '1px solid rgba(255,255,255,0.2)',
-          borderRadius: 10, padding: '4px 12px',
-        }}>
-          <img src="/images/core-icon-perfect.png" alt="Core" style={{ width: 20, height: 20, objectFit: 'contain' }} />
-          <span style={{ fontSize: 12, fontWeight: 800, color: 'white', letterSpacing: '-0.3px' }}>People Intelligence</span>
-        </div>
-
-        {/* Center toolbar */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-          {[BarChart2, Filter, Download, Bell, Settings].map((Icon, i) => (
-            <button key={i} style={{
-              width: 32, height: 32, borderRadius: 8,
-              background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: 'rgba(255,255,255,0.8)',
-            }}>
-              <Icon size={14} />
-            </button>
-          ))}
-
-          {/* Synergy button */}
-          <button
-            onClick={() => setSynergyOpen(true)}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.35)',
-              borderRadius: 8, padding: '6px 12px',
-              color: 'white', fontSize: 12, fontWeight: 700, cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-            }}
-          >
-            <Zap size={13} />
-            Sinergia ({selectedCards.length > 0 ? selectedCards.length : 4})
-          </button>
-        </div>
-
-        {/* Live indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'rgba(255,255,255,0.85)', fontWeight: 600 }}>
-          <span style={{
-            width: 7, height: 7, borderRadius: '50%', background: '#34D399',
-            boxShadow: '0 0 0 2px rgba(52,211,153,0.3)',
-            animation: 'pulse 2s infinite',
-          }} />
-          Ao vivo · atualizado agora
-        </div>
-      </div>
+      <PremiumNavbar
+        synergyOpen={synergyOpen}
+        setSynergyOpen={setSynergyOpen}
+        selectedCards={selectedCards}
+      />
 
       {/* ── CONTENT ── */}
       <div style={{ padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 16, maxWidth: 1600, margin: '0 auto' }}>
 
-        {/* ── ROW 1: 4 KPI Cards + 1 Wide Card (12 cols) ── */}
+        {/* ── ROW 1: 4 KPI Cards + 1 Wide Card ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr) 2fr', gap: 14 }}>
-          {/* KPI 1: Faturamento */}
           <PremiumKpiCard
             title="Faturamento"
             subtitle={`${daysCount} dias • ${kpis.periodDeltaLabel || 'vs ant.'}`}
@@ -617,9 +766,9 @@ function DashboardInner() {
             footerRight={formatK(kpis.receitaLiquidaPrev)}
             selected={selectedCards.includes('receita')}
             onClick={() => { toggleCardSelect('receita'); handleOpenModal('faturamento', { currentTarget: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 200, height: 160 }) } }); }}
+            delay={0.08}
           />
 
-          {/* KPI 2: Margem */}
           <PremiumKpiCard
             title="Margem Bruta"
             subtitle={`${margemPerc.toFixed(1)}% sobre fat.`}
@@ -633,9 +782,9 @@ function DashboardInner() {
             footerRight={formatK(kpis.margemContribuicaoPrev)}
             selected={selectedCards.includes('margem')}
             onClick={() => toggleCardSelect('margem')}
+            delay={0.14}
           />
 
-          {/* KPI 3: CMV / Anomalias */}
           <PremiumKpiCard
             title="Custo (CMV)"
             subtitle="Peso sobre faturamento"
@@ -650,9 +799,9 @@ function DashboardInner() {
             footerRight={formatK(kpis.cmvGeral)}
             selected={selectedCards.includes('cmv')}
             onClick={() => toggleCardSelect('cmv')}
+            delay={0.20}
           />
 
-          {/* KPI 4: Eficiência / Score */}
           <PremiumKpiCard
             title="Score de Eficiência"
             subtitle="Margem trimestral"
@@ -666,13 +815,14 @@ function DashboardInner() {
             footerRight={`${margemPerc.toFixed(1)}% margem`}
             selected={selectedCards.includes('score')}
             onClick={() => toggleCardSelect('score')}
+            delay={0.26}
           />
 
-          {/* KPI 5: Wide - Evolução 12m Stacked */}
           <SectionCard
             title="Evolução CMV & Margem · 12 meses"
             subtitle="Base âmbar = CMV · Topo roxo = Margem · Linha = Média Móvel 3m"
             style={{ display: 'flex', flexDirection: 'column' }}
+            delay={0.32}
           >
             <div style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
               <StackedBarMovingAvg data={stackedBarData} width={380} height={90} />
@@ -682,8 +832,7 @@ function DashboardInner() {
 
         {/* ── ROW 2: 3 Analytical Panels ── */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
-          {/* Panel 1: Projection Area Chart */}
-          <SectionCard title="Evolução & Projeção" subtitle="Realizado · Ano anterior · Meta · Cone de projeção">
+          <SectionCard title="Evolução & Projeção" subtitle="Realizado · Ano anterior · Meta · Cone de projeção" delay={0.38}>
             <div style={{ height: 180 }}>
               <ProjectionAreaChart
                 data={projectionData}
@@ -707,37 +856,43 @@ function DashboardInner() {
             </div>
           </SectionCard>
 
-          {/* Panel 2: Waffle Chart */}
           <SectionCard
             title="Composição do Período"
             subtitle="Cada quadrado = 1% da composição total"
             badge={formatNumber(kpis.volumeTotal) + ' un.'}
+            delay={0.44}
           >
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <WaffleChart segments={waffleSegments} size={180} />
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 4 }}>
                 {waffleSegments.map((seg, i) => (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '6px 10px', borderRadius: 10,
-                    background: '#f8fafc', border: '1px solid #f1f5f9',
-                  }}>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.44 + i * 0.07 }}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '6px 10px', borderRadius: 10,
+                      background: '#f8fafc', border: '1px solid #f1f5f9',
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <div style={{ width: 10, height: 10, borderRadius: 3, background: seg.color, flexShrink: 0 }} />
                       <span style={{ fontSize: 11, fontWeight: 600, color: '#334155' }}>{seg.label}</span>
                     </div>
                     <span style={{ fontSize: 11, fontWeight: 800, color: seg.color }}>{seg.pct}%</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </SectionCard>
 
-          {/* Panel 3: Diverging Bars */}
           <SectionCard
             title="Entradas e Saídas"
             subtitle="Faturamento (↑) vs CMV (↓) · Linha verde = saldo acumulado"
             badge="12 MESES"
+            delay={0.50}
           >
             <div style={{ height: 180 }}>
               <DivergingBarsChart data={divergingData} width={380} height={180} />
@@ -757,25 +912,25 @@ function DashboardInner() {
           </SectionCard>
         </div>
 
-        {/* ── ROW 3: Sankey (8 cols) + Multi-Ring Donut (4 cols) ── */}
+        {/* ── ROW 3: Sankey (2/3) + Multi-Ring Donut (1/3) ── */}
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 14 }}>
-          {/* Sankey */}
           <SectionCard
             title="Fluxo de Faturamento"
             subtitle="Origem → Departamentos → Destino (Margem / CMV)"
             badge={`+${formatK(kpis.margemContribuicao)} MARGEM`}
             style={{ minHeight: 300 }}
+            delay={0.56}
           >
             <div style={{ height: 260 }}>
               <SankeyFlow stages={sankeyStages} width={680} height={260} />
             </div>
           </SectionCard>
 
-          {/* Multi-Ring Donut */}
           <SectionCard
             title="Motivos de Composição"
             subtitle="Anel interno = macro · Anel externo = por departamento"
             badge="12 MESES"
+            delay={0.62}
           >
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <MultiRingDonut
@@ -787,17 +942,23 @@ function DashboardInner() {
               />
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {donutOuter.slice(0, 5).map((seg, i) => (
-                  <div key={i} style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '5px 9px', borderRadius: 9,
-                    background: '#f8fafc', border: '1px solid #f1f5f9',
-                  }}>
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.62 + i * 0.06 }}
+                    style={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      padding: '5px 9px', borderRadius: 9,
+                      background: '#f8fafc', border: '1px solid #f1f5f9',
+                    }}
+                  >
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <div style={{ width: 8, height: 8, borderRadius: 2, background: seg.color, flexShrink: 0 }} />
                       <span style={{ fontSize: 10, fontWeight: 600, color: '#334155', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 90 }}>{seg.label}</span>
                     </div>
                     <span style={{ fontSize: 10, fontWeight: 800, color: seg.color, flexShrink: 0 }}>{seg.pct.toFixed(0)}%</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -827,13 +988,6 @@ function DashboardInner() {
         open={synergyOpen}
         onClose={() => setSynergyOpen(false)}
       />
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { box-shadow: 0 0 0 2px rgba(52,211,153,0.3); }
-          50% { box-shadow: 0 0 0 5px rgba(52,211,153,0.1); }
-        }
-      `}</style>
     </div>
   );
 }
