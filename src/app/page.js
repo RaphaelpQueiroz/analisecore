@@ -6,7 +6,7 @@ import {
   TrendingUp, TrendingDown, DollarSign, Activity,
   Zap, BarChart2, Filter, X,
   Sparkles, Target,
-  Bell, Settings, Search, Download, ArrowRight, Layers, Calendar, ArrowUpDown, LayoutGrid
+  Bell, Settings, Search, Download, ArrowRight, Layers, Calendar, ArrowUpDown, LayoutGrid, Check, CheckCircle2
 } from 'lucide-react';
 import { format, startOfWeek, startOfMonth, startOfYear } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -29,13 +29,6 @@ const formatCurrency = (val, compact = false) => {
 
 const formatNumber = (val) => Math.round(val || 0).toLocaleString('pt-BR');
 
-const formatK = (val) => {
-  if (!val || isNaN(val)) return 'R$ 0';
-  if (Math.abs(val) >= 1000000) return `R$ ${(val / 1000000).toFixed(2).replace('.', ',')}M`;
-  if (Math.abs(val) >= 1000) return `R$ ${Math.round(val / 1000).toLocaleString('pt-BR')}k`;
-  return `R$ ${Math.round(val).toLocaleString('pt-BR')}`;
-};
-
 const formatCompactNumber = (val) => {
   if (!val || isNaN(val)) return '0';
   if (Math.abs(val) >= 1000000) return `${(val / 1000000).toFixed(2).replace('.', ',')}M`;
@@ -49,7 +42,82 @@ const DEPT_COLORS = [
   '#F97316', '#0284C7', '#A855F7', '#E11D48'
 ];
 
-// ─── Funções Estatísticas Reais (Pearson r, Média, Desvio Padrão, Z-Score) ───
+// ─── Contador Animado com Física Suave ───
+function AnimatedCounter({ value, formatCompact = false, isPercent = false, isPts = false }) {
+  const [displayVal, setDisplayVal] = useState(Number(value) || 0);
+  const prevValRef = useRef(Number(value) || 0);
+
+  useEffect(() => {
+    const startVal = prevValRef.current || 0;
+    const endVal = Number(value) || 0;
+    prevValRef.current = endVal;
+
+    if (startVal === endVal) return;
+
+    const duration = 850;
+    const startTime = performance.now();
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = startVal + (endVal - startVal) * ease;
+      setDisplayVal(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [value]);
+
+  if (isPercent) {
+    return <>{displayVal.toFixed(1).replace('.', ',')}%</>;
+  }
+
+  if (isPts) {
+    return <>+{Math.round(displayVal)}</>;
+  }
+
+  if (formatCompact) {
+    if (Math.abs(displayVal) >= 1000000) {
+      return <>{(displayVal / 1000000).toFixed(2).replace('.', ',')}M</>;
+    }
+    if (Math.abs(displayVal) >= 1000) {
+      return <>{Math.round(displayVal / 1000).toLocaleString('pt-BR')}k</>;
+    }
+    return <>{Math.round(displayVal).toLocaleString('pt-BR')}</>;
+  }
+
+  return <>{Math.round(displayVal).toLocaleString('pt-BR')}</>;
+}
+
+// ─── Curvas Cubic Bézier Fluidas (Elimina o Serrote de Linhas Retas) ───
+function buildSmoothSvgPath(rawPoints) {
+  if (!rawPoints || rawPoints.length === 0) return '';
+  const pts = rawPoints.map(p => Array.isArray(p) ? p : [p[0], p[1]]);
+  if (pts.length === 1) return `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  if (pts.length === 2) return `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)} L ${pts[1][0].toFixed(1)} ${pts[1][1].toFixed(1)}`;
+
+  let path = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i === 0 ? i : i - 1];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
+
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 5.5;
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 5.5;
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 5.5;
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 5.5;
+
+    path += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  }
+  return path;
+}
+
+// ─── Funções Estatísticas (Pearson, Média, Z-Score) ───
 function calcMean(arr) {
   if (!arr || !arr.length) return 0;
   return arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -182,7 +250,7 @@ function buildGuaranteed12Series(dashboardData) {
 }
 
 // ============================================================================
-// COMPONENTES VISUAIS SVG DE ALTA PRECISÃO
+// COMPONENTES SVG COM CURVAS BÉZIER SUAVES, GLOW E TOOLTIPS FLUTUANTES
 // ============================================================================
 
 function MiniSparklineSVG({ data = [], color = '#2563EB', id = 'spk' }) {
@@ -191,30 +259,35 @@ function MiniSparklineSVG({ data = [], color = '#2563EB', id = 'spk' }) {
   const min = Math.min(...pts);
   const max = Math.max(...pts);
   const range = max - min || 1;
-  const W = 98;
-  const H = 40;
+  const W = 104;
+  const H = 42;
 
   const coords = pts.map((v, i) => {
-    const x = 4 + (i / (pts.length - 1)) * (W - 10);
-    const y = H - 7 - ((v - min) / range) * (H - 15);
+    const x = 5 + (i / (pts.length - 1)) * (W - 14);
+    const y = H - 8 - ((v - min) / range) * (H - 16);
     return [x, y];
   });
 
-  const linePath = coords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
-  const areaPath = `${linePath} L${coords[coords.length - 1][0].toFixed(1)},${H} L${coords[0][0].toFixed(1)},${H} Z`;
+  const smoothLine = buildSmoothSvgPath(coords);
+  const lastX = coords[coords.length - 1][0];
+  const firstX = coords[0][0];
+  const smoothArea = `${smoothLine} L ${lastX.toFixed(1)} ${H} L ${firstX.toFixed(1)} ${H} Z`;
   const last = coords[coords.length - 1];
 
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ overflow: 'visible', flexShrink: 0 }}>
       <defs>
         <linearGradient id={`grad_${safeId}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.32" />
           <stop offset="100%" stopColor={color} stopOpacity="0.0" />
         </linearGradient>
+        <filter id={`glow_${safeId}`} x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" floodColor={color} floodOpacity="0.35" />
+        </filter>
       </defs>
-      <path d={areaPath} fill={`url(#grad_${safeId})`} />
-      <path d={linePath} fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={last[0]} cy={last[1]} r="3.5" fill="#FFFFFF" stroke={color} strokeWidth="2.2" />
+      <path d={smoothArea} fill={`url(#grad_${safeId})`} />
+      <path d={smoothLine} fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round" filter={`url(#glow_${safeId})`} />
+      <circle cx={last[0]} cy={last[1]} r="3.8" fill="#FFFFFF" stroke={color} strokeWidth="2.4" />
     </svg>
   );
 }
@@ -225,28 +298,30 @@ function BulletGoalSVG({ valuePct = 70.6, goalPct = 68, color = '#0EA5E9' }) {
   const targetPct = Math.min(Math.max((goalPct / max) * 100, 10), 92);
 
   return (
-    <div style={{ width: 112, display: 'flex', flexDirection: 'column', gap: 3, paddingBottom: 2 }}>
+    <div style={{ width: 114, display: 'flex', flexDirection: 'column', gap: 3, paddingBottom: 2 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, fontWeight: 700, color: '#64748b' }}>
         <span>Meta ≤ {goalPct}%</span>
       </div>
-      <div style={{ position: 'relative', height: 8, background: '#E2E8F0', borderRadius: 999 }}>
+      <div style={{ position: 'relative', height: 8, background: '#E2E8F0', borderRadius: 999, overflow: 'hidden' }}>
         <div
           style={{
             width: `${pct}%`,
             height: '100%',
             borderRadius: 999,
             background: `linear-gradient(90deg, #38BDF8, ${color})`,
+            boxShadow: '0 1px 4px rgba(14,165,233,0.3)'
           }}
         />
         <div
           style={{
             position: 'absolute',
             left: `${targetPct}%`,
-            top: -3,
+            top: 0,
             width: 2.5,
-            height: 14,
+            height: '100%',
             background: '#0F172A',
             borderRadius: 2,
+            zIndex: 2
           }}
         />
       </div>
@@ -278,6 +353,7 @@ function SemiGaugeSVG({ score = 84 }) {
 }
 
 function StackedBarsCard5SVG({ labels = [], cmvArr = [], profArr = [] }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
   const count = labels.length || 12;
   const items = Array.from({ length: count }, (_, i) => ({
     label: labels[i] || `P${i + 1}`,
@@ -287,7 +363,7 @@ function StackedBarsCard5SVG({ labels = [], cmvArr = [], profArr = [] }) {
   const maxTotal = Math.max(...items.map(d => d.cmv + d.mc), 1);
   const W = 440, H = 98, baseY = 76, maxBarH = 54;
 
-  const linePts = items.map((d, i) => {
+  const lineCoords = items.map((d, i) => {
     const slice = items.slice(Math.max(0, i - 2), i + 1);
     const avg = slice.reduce((s, x) => s + x.cmv + x.mc, 0) / slice.length;
     const x = 42 + i * 32.5 + 7;
@@ -295,51 +371,105 @@ function StackedBarsCard5SVG({ labels = [], cmvArr = [], profArr = [] }) {
     return [x, y];
   });
 
-  const linePath = linePts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const smoothLine = buildSmoothSvgPath(lineCoords);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 96, overflow: 'visible' }}>
-      <line x1="32" y1="22" x2={W - 6} y2="22" stroke="#F1F5F9" strokeWidth="1" />
-      <line x1="32" y1="49" x2={W - 6} y2="49" stroke="#F1F5F9" strokeWidth="1" />
-      <line x1="32" y1={baseY} x2={W - 6} y2={baseY} stroke="#E2E8F0" strokeWidth="1" />
+    <div style={{ position: 'relative', width: '100%' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: 96, overflow: 'visible' }}>
+        <defs>
+          <filter id="glowAvgLine" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#0F172A" floodOpacity="0.25" />
+          </filter>
+        </defs>
 
-      <text x="0" y="25" fontSize="8.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxTotal)}</text>
-      <text x="0" y="52" fontSize="8.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxTotal / 2)}</text>
-      <text x="14" y={baseY + 3} fontSize="8.5" fill="#94A3B8" fontWeight="600">0</text>
+        <line x1="32" y1="22" x2={W - 6} y2="22" stroke="#F1F5F9" strokeWidth="1" />
+        <line x1="32" y1="49" x2={W - 6} y2="49" stroke="#F1F5F9" strokeWidth="1" />
+        <line x1="32" y1={baseY} x2={W - 6} y2={baseY} stroke="#E2E8F0" strokeWidth="1" />
 
-      {items.map((item, idx) => {
-        const x = 42 + idx * 32.5;
-        const cmvH = Math.max(4, (item.cmv / maxTotal) * maxBarH);
-        const mcH = Math.max(3, (item.mc / maxTotal) * maxBarH);
-        return (
-          <g key={idx}>
-            <rect x={x} y={baseY - cmvH} width="14" height={cmvH} rx="2.5" fill="#F59E0B" />
-            <rect x={x} y={baseY - cmvH - mcH - 1} width="14" height={mcH} rx="2.5" fill="#8B5CF6" />
-            <text x={x + 7} y="91" textAnchor="middle" fontSize="8" fill="#64748B" fontWeight="600">
-              {item.label}
-            </text>
-          </g>
-        );
-      })}
+        <text x="0" y="25" fontSize="8.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxTotal)}</text>
+        <text x="0" y="52" fontSize="8.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxTotal / 2)}</text>
+        <text x="14" y={baseY + 3} fontSize="8.5" fill="#94A3B8" fontWeight="600">0</text>
 
-      {linePts.length > 1 && (
-        <>
-          <path d={linePath} fill="none" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" />
-          <circle
-            cx={linePts[linePts.length - 1][0]}
-            cy={linePts[linePts.length - 1][1]}
-            r="3.5"
-            fill="#FFFFFF"
-            stroke="#1E293B"
-            strokeWidth="2"
-          />
-        </>
+        {items.map((item, idx) => {
+          const x = 42 + idx * 32.5;
+          const cmvH = Math.max(4, (item.cmv / maxTotal) * maxBarH);
+          const mcH = Math.max(3, (item.mc / maxTotal) * maxBarH);
+          const isHov = hoveredIdx === idx;
+          const opacity = hoveredIdx === null || isHov ? 1 : 0.42;
+
+          return (
+            <g
+              key={idx}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              style={{ cursor: 'pointer', transition: 'opacity 0.15s ease' }}
+              opacity={opacity}
+            >
+              <rect x={x} y={baseY - cmvH} width="14" height={cmvH} rx="2.5" fill="#F59E0B" />
+              <rect x={x} y={baseY - cmvH - mcH - 1} width="14" height={mcH} rx="2.5" fill="#8B5CF6" />
+              <text x={x + 7} y="91" textAnchor="middle" fontSize="8" fill={isHov ? '#0F172A' : '#64748B'} fontWeight={isHov ? '800' : '600'}>
+                {item.label}
+              </text>
+            </g>
+          );
+        })}
+
+        {lineCoords.length > 1 && (
+          <>
+            <path d={smoothLine} fill="none" stroke="#1E293B" strokeWidth="2.2" strokeLinecap="round" filter="url(#glowAvgLine)" />
+            <circle
+              cx={lineCoords[lineCoords.length - 1][0]}
+              cy={lineCoords[lineCoords.length - 1][1]}
+              r="3.5"
+              fill="#FFFFFF"
+              stroke="#1E293B"
+              strokeWidth="2"
+            />
+          </>
+        )}
+      </svg>
+
+      {/* Tooltip Flutuante Escuro */}
+      {hoveredIdx !== null && (
+        <div
+          style={{
+            position: 'absolute',
+            top: -12,
+            left: Math.min(280, Math.max(10, 42 + hoveredIdx * 28)),
+            background: '#0F172A',
+            color: '#FFFFFF',
+            padding: '7px 11px',
+            borderRadius: 10,
+            fontSize: 9.5,
+            boxShadow: '0 10px 25px rgba(15,23,42,0.38)',
+            pointerEvents: 'none',
+            zIndex: 30,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 3 }}>
+            Período: {items[hoveredIdx].label}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#FCD34D' }}>● Custo CMV:</span>
+            <strong>{formatCurrency(items[hoveredIdx].cmv, true)} ({((items[hoveredIdx].cmv / (items[hoveredIdx].cmv + items[hoveredIdx].mc || 1)) * 100).toFixed(1)}%)</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#C4B5FD' }}>● Margem Bruta:</span>
+            <strong>{formatCurrency(items[hoveredIdx].mc, true)} ({((items[hoveredIdx].mc / (items[hoveredIdx].cmv + items[hoveredIdx].mc || 1)) * 100).toFixed(1)}%)</strong>
+          </div>
+          <div style={{ borderTop: '1px solid #334155', marginTop: 4, paddingTop: 3, display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#CBD5E1' }}>Faturamento:</span>
+            <strong style={{ color: '#38BDF8' }}>{formatCurrency(items[hoveredIdx].cmv + items[hoveredIdx].mc, true)}</strong>
+          </div>
+        </div>
       )}
-    </svg>
+    </div>
   );
 }
 
 function EvolutionProjectionSVG({ labels = [], revArr = [] }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
   const count = labels.length || 12;
   const realPts = Array.from({ length: count }, (_, i) => ({
     label: labels[i] || `P${i + 1}`,
@@ -355,7 +485,7 @@ function EvolutionProjectionSVG({ labels = [], revArr = [] }) {
   const allMin = Math.min(...realPts.map(d => d.receita * 0.8), avgVal * 0.65);
   const range = allMax - allMin || 1;
 
-  const W = 410, H = 175, padL = 38, padR = 14, topY = 18, botY = 145;
+  const W = 410, H = 175, padL = 38, padR = 14, topY = 22, botY = 145;
   const usableW = W - padL - padR;
   const usableH = botY - topY;
 
@@ -365,9 +495,12 @@ function EvolutionProjectionSVG({ labels = [], revArr = [] }) {
   const realCoords = realPts.map((d, i) => [toX(i), toY(d.receita)]);
   const prevCoords = realPts.map((d, i) => [toX(i), toY(d.receita * (0.89 + (i % 3) * 0.02))]);
 
-  const realPath = realCoords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
-  const areaPath = `${realPath} L${realCoords[realCoords.length - 1][0].toFixed(1)},${botY} L${realCoords[0][0].toFixed(1)},${botY} Z`;
-  const prevPath = prevCoords.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+  const smoothRealLine = buildSmoothSvgPath(realCoords);
+  const smoothPrevLine = buildSmoothSvgPath(prevCoords);
+
+  const lastRealX = realCoords[realCoords.length - 1][0];
+  const firstRealX = realCoords[0][0];
+  const smoothRealArea = `${smoothRealLine} L ${lastRealX.toFixed(1)} ${botY} L ${firstRealX.toFixed(1)} ${botY} Z`;
 
   const todayX = realCoords[realCoords.length - 1][0];
   const todayY = realCoords[realCoords.length - 1][1];
@@ -375,66 +508,145 @@ function EvolutionProjectionSVG({ labels = [], revArr = [] }) {
   const projMidY = toY(metaVal * 1.01);
   const projTopY = toY(metaVal * 1.06);
   const projBotY = toY(lastReal * 0.96);
-  const metaY = toY(metaVal);
+  const metaY = Math.max(14, toY(metaVal));
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-      <defs>
-        <linearGradient id="evoAreaGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#2563EB" stopOpacity="0.26" />
-          <stop offset="100%" stopColor="#2563EB" stopOpacity="0.01" />
-        </linearGradient>
-      </defs>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="evoAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#2563EB" stopOpacity="0.01" />
+          </linearGradient>
+          <filter id="glowBlueCurve" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#2563EB" floodOpacity="0.4" />
+          </filter>
+        </defs>
 
-      {[0, 0.25, 0.5, 0.75, 1].map((t, idx) => {
-        const y = topY + t * usableH;
-        const val = allMax - t * range;
-        return (
-          <g key={idx}>
-            <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="#F1F5F9" strokeWidth="1" />
-            <text x="0" y={y + 3} fontSize="8" fill="#94A3B8" fontWeight="600">
-              {formatCompactNumber(val)}
+        {[0, 0.25, 0.5, 0.75, 1].map((t, idx) => {
+          const y = topY + t * usableH;
+          const val = allMax - t * range;
+          return (
+            <g key={idx}>
+              <line x1={padL} y1={y} x2={W - padR} y2={y} stroke="#F1F5F9" strokeWidth="1" />
+              <text x="0" y={y + 3} fontSize="8" fill="#94A3B8" fontWeight="600">
+                {formatCompactNumber(val)}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Linha de Meta sem sobrepor o pico */}
+        <line x1={padL} y1={metaY} x2={W - padR} y2={metaY} stroke="#7C3AED" strokeWidth="1.2" strokeDasharray="3 3" />
+        <rect x={padL + 2} y={metaY - 13} width="66" height="12" rx="3.5" fill="#7C3AED" />
+        <text x={padL + 35} y={metaY - 4.5} textAnchor="middle" fontSize="7.5" fontWeight="800" fill="#FFFFFF">
+          META {formatCompactNumber(metaVal)}
+        </text>
+
+        {/* Curvas Bézier Fluidas */}
+        <path d={smoothRealArea} fill="url(#evoAreaGrad)" />
+        <path d={smoothPrevLine} fill="none" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="4 3" />
+        <path d={smoothRealLine} fill="none" stroke="#2563EB" strokeWidth="2.8" strokeLinecap="round" filter="url(#glowBlueCurve)" />
+
+        {/* Cone de Projeção Futura */}
+        <polygon
+          points={`${todayX},${todayY} ${endX},${projTopY} ${endX},${projBotY}`}
+          fill="rgba(37, 99, 235, 0.10)"
+        />
+        <line x1={todayX} y1={todayY} x2={endX} y2={projMidY} stroke="#2563EB" strokeWidth="2" strokeDasharray="3 3" />
+        <circle cx={endX} cy={projMidY} r="3.5" fill="#7C3AED" stroke="#FFFFFF" strokeWidth="1.5" />
+
+        {/* Marcador HOJE / ATUAL */}
+        <line x1={todayX} y1={metaY} x2={todayX} y2={botY} stroke="#0F172A" strokeWidth="1" strokeDasharray="2 2" />
+        <circle cx={todayX} cy={todayY} r="4.5" fill="#FFFFFF" stroke="#2563EB" strokeWidth="2.5" />
+        <rect x={todayX - 16} y={botY - 13} width="32" height="13" rx="3" fill="#0F172A" />
+        <text x={todayX} y={botY - 4} textAnchor="middle" fontSize="7.5" fontWeight="800" fill="#FFFFFF">
+          ATUAL
+        </text>
+
+        {/* Crosshair e Pontos Interativos com Hover */}
+        {realCoords.map((pt, i) => {
+          const isHov = hoveredIdx === i;
+          return (
+            <g key={i}>
+              {isHov && (
+                <line x1={pt[0]} y1={topY} x2={pt[0]} y2={botY} stroke="#3B82F6" strokeWidth="1" strokeDasharray="3 2" />
+              )}
+              <circle
+                cx={pt[0]}
+                cy={pt[1]}
+                r={isHov ? 5.5 : 3}
+                fill={isHov ? '#2563EB' : '#FFFFFF'}
+                stroke="#2563EB"
+                strokeWidth={isHov ? 2.5 : 1.5}
+                style={{ cursor: 'pointer', transition: 'all 0.15s ease' }}
+                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseLeave={() => setHoveredIdx(null)}
+              />
+              <rect
+                x={pt[0] - 12}
+                y={topY}
+                width="24"
+                height={usableH}
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHoveredIdx(i)}
+                onMouseLeave={() => setHoveredIdx(null)}
+              />
+            </g>
+          );
+        })}
+
+        {fullLabels.map((lbl, i) => (
+          i % 2 === 0 || i === fullLabels.length - 1 ? (
+            <text key={i} x={toX(i)} y={botY + 15} textAnchor="middle" fontSize="7.5" fill="#64748B" fontWeight="600">
+              {lbl}
             </text>
-          </g>
-        );
-      })}
+          ) : null
+        ))}
+      </svg>
 
-      <line x1={padL} y1={metaY} x2={W - padR} y2={metaY} stroke="#7C3AED" strokeWidth="1.3" strokeDasharray="3 3" />
-      <rect x={padL + 4} y={metaY - 14} width="64" height="13" rx="3.5" fill="#7C3AED" />
-      <text x={padL + 36} y={metaY - 5} textAnchor="middle" fontSize="7.5" fontWeight="800" fill="#FFFFFF">
-        META {formatCompactNumber(metaVal)}
-      </text>
-
-      <path d={areaPath} fill="url(#evoAreaGrad)" />
-      <path d={prevPath} fill="none" stroke="#94A3B8" strokeWidth="1.5" strokeDasharray="4 3" />
-      <path d={realPath} fill="none" stroke="#2563EB" strokeWidth="2.6" strokeLinecap="round" />
-
-      <polygon
-        points={`${todayX},${todayY} ${endX},${projTopY} ${endX},${projBotY}`}
-        fill="rgba(37, 99, 235, 0.10)"
-      />
-      <line x1={todayX} y1={todayY} x2={endX} y2={projMidY} stroke="#2563EB" strokeWidth="2" strokeDasharray="3 3" />
-      <circle cx={endX} cy={projMidY} r="3.5" fill="#7C3AED" stroke="#FFFFFF" strokeWidth="1.5" />
-
-      <line x1={todayX} y1={metaY} x2={todayX} y2={botY} stroke="#0F172A" strokeWidth="1" strokeDasharray="2 2" />
-      <circle cx={todayX} cy={todayY} r="4.5" fill="#FFFFFF" stroke="#2563EB" strokeWidth="2.5" />
-      <rect x={todayX - 16} y={botY - 13} width="32" height="13" rx="3" fill="#0F172A" />
-      <text x={todayX} y={botY - 4} textAnchor="middle" fontSize="7.5" fontWeight="800" fill="#FFFFFF">
-        ATUAL
-      </text>
-
-      {fullLabels.map((lbl, i) => (
-        i % 2 === 0 || i === fullLabels.length - 1 ? (
-          <text key={i} x={toX(i)} y={botY + 15} textAnchor="middle" fontSize="7.5" fill="#64748B" fontWeight="600">
-            {lbl}
-          </text>
-        ) : null
-      ))}
-    </svg>
+      {/* Tooltip Flutuante Escuro */}
+      {hoveredIdx !== null && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 6,
+            left: Math.min(260, Math.max(20, realCoords[hoveredIdx][0] - 50)),
+            background: '#0F172A',
+            color: '#FFFFFF',
+            padding: '7px 11px',
+            borderRadius: 10,
+            fontSize: 9.5,
+            boxShadow: '0 10px 25px rgba(15,23,42,0.38)',
+            pointerEvents: 'none',
+            zIndex: 30,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 3 }}>
+            Período: {realPts[hoveredIdx].label}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#60A5FA' }}>● Realizado:</span>
+            <strong>{formatCurrency(realPts[hoveredIdx].receita, true)}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#CBD5E1' }}>● Período Ant.:</span>
+            <strong>{formatCurrency(realPts[hoveredIdx].receita * 0.91, true)}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#C4B5FD' }}>● Meta Esperada:</span>
+            <strong>{formatCurrency(metaVal, true)}</strong>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
 function DivergingMirroredSVG({ labels = [], revArr = [], cmvArr = [] }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
   const count = labels.length || 12;
   const items = Array.from({ length: count }, (_, i) => ({
     label: labels[i] || `P${i + 1}`,
@@ -454,72 +666,125 @@ function DivergingMirroredSVG({ labels = [], revArr = [], cmvArr = [] }) {
   const minBal = Math.min(...balances, 0);
   const balRange = maxBal - minBal || 1;
 
-  const linePts = balances.map((b, i) => {
+  const lineCoords = balances.map((b, i) => {
     const x = 32 + i * 27.5 + 6;
     const y = midY - ((b - minBal) / balRange) * (maxHalfH - 6);
     return [x, y];
   });
-  const linePath = linePts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+
+  const smoothGreenLine = buildSmoothSvgPath(lineCoords);
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-      <defs>
-        <linearGradient id="divUpGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1D4ED8" />
-          <stop offset="100%" stopColor="#60A5FA" stopOpacity="0.75" />
-        </linearGradient>
-        <linearGradient id="divDownGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#FCA5A5" stopOpacity="0.75" />
-          <stop offset="100%" stopColor="#EF4444" />
-        </linearGradient>
-      </defs>
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+        <defs>
+          <linearGradient id="divUpGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#1D4ED8" />
+            <stop offset="100%" stopColor="#60A5FA" stopOpacity="0.75" />
+          </linearGradient>
+          <linearGradient id="divDownGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#FCA5A5" stopOpacity="0.75" />
+            <stop offset="100%" stopColor="#EF4444" />
+          </linearGradient>
+          <filter id="glowGreenLine" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2.5" stdDeviation="2.5" floodColor="#10B981" floodOpacity="0.4" />
+          </filter>
+        </defs>
 
-      <line x1="24" y1={midY - maxHalfH} x2="362" y2={midY - maxHalfH} stroke="#F1F5F9" strokeWidth="1" />
-      <line x1="24" y1={midY} x2="362" y2={midY} stroke="#CBD5E1" strokeWidth="1.2" />
-      <line x1="24" y1={midY + maxHalfH} x2="362" y2={midY + maxHalfH} stroke="#F1F5F9" strokeWidth="1" />
+        <line x1="24" y1={midY - maxHalfH} x2="362" y2={midY - maxHalfH} stroke="#F1F5F9" strokeWidth="1" />
+        <line x1="24" y1={midY} x2="362" y2={midY} stroke="#CBD5E1" strokeWidth="1.2" />
+        <line x1="24" y1={midY + maxHalfH} x2="362" y2={midY + maxHalfH} stroke="#F1F5F9" strokeWidth="1" />
 
-      <text x="0" y={midY - maxHalfH + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxVal)}</text>
-      <text x="8" y={midY + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">0</text>
-      <text x="0" y={midY + maxHalfH + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxVal)}</text>
+        <text x="0" y={midY - maxHalfH + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxVal)}</text>
+        <text x="8" y={midY + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">0</text>
+        <text x="0" y={midY + maxHalfH + 3} fontSize="7.5" fill="#94A3B8" fontWeight="600">{formatCompactNumber(maxVal)}</text>
 
-      <text x="366" y={midY - maxHalfH + 4} fontSize="7.5" fontWeight="800" fill="#059669">+{formatCompactNumber(maxBal)}</text>
-      <text x="366" y={midY + 3} fontSize="7.5" fontWeight="800" fill="#059669">+0</text>
+        <text x="366" y={midY - maxHalfH + 4} fontSize="7.5" fontWeight="800" fill="#059669">+{formatCompactNumber(maxBal)}</text>
+        <text x="366" y={midY + 3} fontSize="7.5" fontWeight="800" fill="#059669">+0</text>
 
-      {items.map((item, idx) => {
-        const x = 32 + idx * 27.5;
-        const upH = Math.max(4, (item.receita / maxVal) * maxHalfH);
-        const downH = Math.max(4, (item.cmv / maxVal) * maxHalfH);
-        return (
-          <g key={idx}>
-            <rect x={x} y={midY - upH} width="12" height={upH} rx="3" fill="url(#divUpGrad)" />
-            <rect x={x} y={midY} width="12" height={downH} rx="3" fill="url(#divDownGrad)" />
-            {idx % 2 === 0 && (
-              <text x={x + 6} y="158" textAnchor="middle" fontSize="7.5" fill="#64748B" fontWeight="600">
-                {item.label}
-              </text>
-            )}
-          </g>
-        );
-      })}
+        {items.map((item, idx) => {
+          const x = 32 + idx * 27.5;
+          const upH = Math.max(4, (item.receita / maxVal) * maxHalfH);
+          const downH = Math.max(4, (item.cmv / maxVal) * maxHalfH);
+          const isHov = hoveredIdx === idx;
+          const opacity = hoveredIdx === null || isHov ? 1 : 0.4;
 
-      {linePts.length > 1 && (
-        <>
-          <path d={linePath} fill="none" stroke="#10B981" strokeWidth="2.4" strokeLinecap="round" />
-          <circle
-            cx={linePts[linePts.length - 1][0]}
-            cy={linePts[linePts.length - 1][1]}
-            r="4"
-            fill="#FFFFFF"
-            stroke="#10B981"
-            strokeWidth="2.2"
-          />
-        </>
+          return (
+            <g
+              key={idx}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              style={{ cursor: 'pointer', transition: 'opacity 0.15s ease' }}
+              opacity={opacity}
+            >
+              <rect x={x} y={midY - upH} width="12" height={upH} rx="3" fill="url(#divUpGrad)" />
+              <rect x={x} y={midY} width="12" height={downH} rx="3" fill="url(#divDownGrad)" />
+              {idx % 2 === 0 && (
+                <text x={x + 6} y="158" textAnchor="middle" fontSize="7.5" fill={isHov ? '#0F172A' : '#64748B'} fontWeight={isHov ? '800' : '600'}>
+                  {item.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        {lineCoords.length > 1 && (
+          <>
+            <path d={smoothGreenLine} fill="none" stroke="#10B981" strokeWidth="2.6" strokeLinecap="round" filter="url(#glowGreenLine)" />
+            <circle
+              cx={lineCoords[lineCoords.length - 1][0]}
+              cy={lineCoords[lineCoords.length - 1][1]}
+              r="4"
+              fill="#FFFFFF"
+              stroke="#10B981"
+              strokeWidth="2.2"
+            />
+          </>
+        )}
+      </svg>
+
+      {/* Tooltip Flutuante Escuro */}
+      {hoveredIdx !== null && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 4,
+            left: Math.min(250, Math.max(10, 32 + hoveredIdx * 25)),
+            background: '#0F172A',
+            color: '#FFFFFF',
+            padding: '7px 11px',
+            borderRadius: 10,
+            fontSize: 9.5,
+            boxShadow: '0 10px 25px rgba(15,23,42,0.38)',
+            pointerEvents: 'none',
+            zIndex: 30,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase', marginBottom: 3 }}>
+            Período: {items[hoveredIdx].label}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#60A5FA' }}>● Entrada (Fat.):</span>
+            <strong>{formatCurrency(items[hoveredIdx].receita, true)}</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#F87171' }}>● Saída (CMV):</span>
+            <strong>{formatCurrency(items[hoveredIdx].cmv, true)}</strong>
+          </div>
+          <div style={{ borderTop: '1px solid #334155', marginTop: 4, paddingTop: 3, display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#86EFAC' }}>Saldo Líquido:</span>
+            <strong style={{ color: '#10B981' }}>+{formatCurrency(items[hoveredIdx].receita - items[hoveredIdx].cmv, true)}</strong>
+          </div>
+        </div>
       )}
-    </svg>
+    </div>
   );
 }
 
 function SankeyFlowRichSVG({ departments = [], totalRev = 3653813, totalProf = 1074221 }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null);
+
   const topDepts = (departments.length > 0 ? departments : [
     { name: 'MERCEARIA', revenue: 810000, value: 810000 },
     { name: 'AÇOUGUE', revenue: 650000, value: 650000 },
@@ -560,109 +825,167 @@ function SankeyFlowRichSVG({ departments = [], totalRev = 3653813, totalProf = 1
   const totalLeftH = 185;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-      <defs>
-        {midNodes.map((n, i) => (
-          <linearGradient key={i} id={`skGrad_${i}`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#2563EB" stopOpacity="0.38" />
-            <stop offset="100%" stopColor={n.color} stopOpacity="0.48" />
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: '100%', height: '100%', overflow: 'visible' }}>
+        <defs>
+          {midNodes.map((n, i) => (
+            <linearGradient key={i} id={`skGrad_${i}`} x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#2563EB" stopOpacity="0.45" />
+              <stop offset="100%" stopColor={n.color} stopOpacity="0.55" />
+            </linearGradient>
+          ))}
+          <linearGradient id="skToMargem" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.38" />
+            <stop offset="100%" stopColor="#10B981" stopOpacity="0.6" />
           </linearGradient>
-        ))}
-        <linearGradient id="skToMargem" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#10B981" stopOpacity="0.50" />
-        </linearGradient>
-        <linearGradient id="skToCmv" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.30" />
-          <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.48" />
-        </linearGradient>
-      </defs>
+          <linearGradient id="skToCmv" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#3B82F6" stopOpacity="0.32" />
+            <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
 
-      <text x={leftX - 12} y="102" textAnchor="end" fontSize="10.5" fontWeight="700" fill="#64748B">
-        Faturamento Total
-      </text>
-      <text x={leftX - 12} y="122" textAnchor="end" fontSize="16" fontWeight="900" fill="#0F172A">
-        {formatK(totalRev)}
-      </text>
-      <text x={leftX - 12} y="136" textAnchor="end" fontSize="9.5" fontWeight="600" fill="#10B981">
-        100% Receita Bruta
-      </text>
+        <text x={leftX - 12} y="102" textAnchor="end" fontSize="10.5" fontWeight="700" fill="#64748B">
+          Faturamento Total
+        </text>
+        <text x={leftX - 12} y="122" textAnchor="end" fontSize="16" fontWeight="900" fill="#0F172A">
+          {formatK(totalRev)}
+        </text>
+        <text x={leftX - 12} y="136" textAnchor="end" fontSize="9.5" fontWeight="600" fill="#10B981">
+          100% Receita Bruta
+        </text>
 
-      <rect x={leftX} y="24" width="10" height={totalLeftH} rx="5" fill="#2563EB" />
+        <rect x={leftX} y="24" width="10" height={totalLeftH} rx="5" fill="#2563EB" />
 
-      {midNodes.map((n, i) => {
-        const ribbonW = Math.max(8, n.h * 0.85);
-        const startY = curLeftY + ribbonW / 2;
-        curLeftY += ribbonW + 3;
+        {midNodes.map((n, i) => {
+          const ribbonW = Math.max(8, n.h * 0.85);
+          const startY = curLeftY + ribbonW / 2;
+          curLeftY += ribbonW + 3;
 
-        const wToMargem = Math.max(4, ribbonW * 0.32);
-        const wToCmv = Math.max(6, ribbonW * 0.68);
-        const targetMargemY = 36 + i * 9;
-        const targetCmvY = 122 + i * 14;
+          const wToMargem = Math.max(4, ribbonW * 0.32);
+          const wToCmv = Math.max(6, ribbonW * 0.68);
+          const targetMargemY = 36 + i * 9;
+          const targetCmvY = 122 + i * 14;
 
-        return (
-          <g key={i}>
-            <path
-              d={`M ${leftX + 10} ${startY} C ${leftX + 95} ${startY}, ${midX - 95} ${n.cy}, ${midX} ${n.cy}`}
-              fill="none"
-              stroke={`url(#skGrad_${i})`}
-              strokeWidth={ribbonW}
-            />
-            <path
-              d={`M ${midX + 10} ${n.cy - n.h * 0.15} C ${midX + 110} ${n.cy - n.h * 0.15}, ${rightX - 110} ${targetMargemY}, ${rightX} ${targetMargemY}`}
-              fill="none"
-              stroke="url(#skToMargem)"
-              strokeWidth={wToMargem}
-            />
-            <path
-              d={`M ${midX + 10} ${n.cy + n.h * 0.15} C ${midX + 110} ${n.cy + n.h * 0.15}, ${rightX - 110} ${targetCmvY}, ${rightX} ${targetCmvY}`}
-              fill="none"
-              stroke="url(#skToCmv)"
-              strokeWidth={wToCmv}
-            />
-          </g>
-        );
-      })}
+          const isHov = hoveredIdx === i;
+          const op = hoveredIdx === null ? 0.55 : isHov ? 0.92 : 0.16;
 
-      {midNodes.map((n, i) => (
-        <g key={i}>
-          <rect x={midX} y={n.y} width="10" height={n.h} rx="4" fill={n.color} />
-          <text x={midX + 16} y={n.cy + 3} fontSize="10" fontWeight="800" fill="#1E293B">
-            {n.name}{' '}
-            <tspan fontWeight="600" fill="#64748B">
-              {formatK(n.value)} ({n.pct.toFixed(0)}%)
-            </tspan>
-          </text>
-        </g>
-      ))}
+          return (
+            <g
+              key={i}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              style={{ cursor: 'pointer', transition: 'opacity 0.2s ease' }}
+            >
+              <path
+                d={`M ${leftX + 10} ${startY} C ${leftX + 95} ${startY}, ${midX - 95} ${n.cy}, ${midX} ${n.cy}`}
+                fill="none"
+                stroke={`url(#skGrad_${i})`}
+                strokeWidth={isHov ? ribbonW + 3 : ribbonW}
+                strokeOpacity={op}
+              />
+              <path
+                d={`M ${midX + 10} ${n.cy - n.h * 0.15} C ${midX + 110} ${n.cy - n.h * 0.15}, ${rightX - 110} ${targetMargemY}, ${rightX} ${targetMargemY}`}
+                fill="none"
+                stroke="url(#skToMargem)"
+                strokeWidth={isHov ? wToMargem + 2 : wToMargem}
+                strokeOpacity={op}
+              />
+              <path
+                d={`M ${midX + 10} ${n.cy + n.h * 0.15} C ${midX + 110} ${n.cy + n.h * 0.15}, ${rightX - 110} ${targetCmvY}, ${rightX} ${targetCmvY}`}
+                fill="none"
+                stroke="url(#skToCmv)"
+                strokeWidth={isHov ? wToCmv + 2 : wToCmv}
+                strokeOpacity={op}
+              />
+            </g>
+          );
+        })}
 
-      <rect x={rightX} y="22" width="10" height="68" rx="5" fill="#10B981" />
-      <text x={rightX + 16} y="50" fontSize="10.5" fontWeight="700" fill="#64748B">
-        Margem Retida
-      </text>
-      <text x={rightX + 16} y="68" fontSize="15" fontWeight="900" fill="#059669">
-        {formatK(mcVal)} <tspan fontSize="11" fontWeight="700" fill="#64748B">({mcPct}%)</tspan>
-      </text>
+        {midNodes.map((n, i) => {
+          const isHov = hoveredIdx === i;
+          return (
+            <g
+              key={i}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              style={{ cursor: 'pointer' }}
+            >
+              <rect x={midX} y={n.y} width="10" height={n.h} rx="4" fill={n.color} />
+              <text x={midX + 16} y={n.cy + 3} fontSize="10" fontWeight={isHov ? '900' : '800'} fill="#1E293B">
+                {n.name}{' '}
+                <tspan fontWeight="600" fill="#64748B">
+                  {formatK(n.value)} ({n.pct.toFixed(0)}%)
+                </tspan>
+              </text>
+            </g>
+          );
+        })}
 
-      <rect x={rightX} y="104" width="10" height="108" rx="5" fill="#F59E0B" />
-      <text x={rightX + 16} y="152" fontSize="10.5" fontWeight="700" fill="#64748B">
-        CMV / Custo Direto
-      </text>
-      <text x={rightX + 16} y="170" fontSize="15" fontWeight="900" fill="#D97706">
-        {formatK(cmvVal)} <tspan fontSize="11" fontWeight="700" fill="#64748B">({cmvPct}%)</tspan>
-      </text>
-    </svg>
+        <rect x={rightX} y="22" width="10" height="68" rx="5" fill="#10B981" />
+        <text x={rightX + 16} y="50" fontSize="10.5" fontWeight="700" fill="#64748B">
+          Margem Retida
+        </text>
+        <text x={rightX + 16} y="68" fontSize="15" fontWeight="900" fill="#059669">
+          {formatK(mcVal)} <tspan fontSize="11" fontWeight="700" fill="#64748B">({mcPct}%)</tspan>
+        </text>
+
+        <rect x={rightX} y="104" width="10" height="108" rx="5" fill="#F59E0B" />
+        <text x={rightX + 16} y="152" fontSize="10.5" fontWeight="700" fill="#64748B">
+          CMV / Custo Direto
+        </text>
+        <text x={rightX + 16} y="170" fontSize="15" fontWeight="900" fill="#D97706">
+          {formatK(cmvVal)} <tspan fontSize="11" fontWeight="700" fill="#64748B">({cmvPct}%)</tspan>
+        </text>
+      </svg>
+
+      {/* Tooltip Flutuante Escuro */}
+      {hoveredIdx !== null && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 14,
+            left: 310,
+            background: '#0F172A',
+            color: '#FFFFFF',
+            padding: '8px 12px',
+            borderRadius: 10,
+            fontSize: 9.5,
+            boxShadow: '0 10px 25px rgba(15,23,42,0.38)',
+            pointerEvents: 'none',
+            zIndex: 30,
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <div style={{ fontWeight: 800, color: '#38BDF8', textTransform: 'uppercase', marginBottom: 4 }}>
+            Setor: {midNodes[hoveredIdx].name}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14 }}>
+            <span style={{ color: '#CBD5E1' }}>Faturamento:</span>
+            <strong>{formatCurrency(midNodes[hoveredIdx].value, true)} ({midNodes[hoveredIdx].pct.toFixed(1)}%)</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#86EFAC' }}>Margem Estimada:</span>
+            <strong>{formatCurrency(midNodes[hoveredIdx].value * 0.294, true)} (29,4%)</strong>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, marginTop: 2 }}>
+            <span style={{ color: '#FCD34D' }}>Custo CMV:</span>
+            <strong>{formatCurrency(midNodes[hoveredIdx].value * 0.706, true)} (70,6%)</strong>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
+function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813, onHoverSector, activeHoverName }) {
+  const [internalHover, setInternalHover] = useState(null);
   const size = 168;
   const cx = size / 2, cy = size / 2;
   const rOut = 64, rIn = 44;
   const circOut = 2 * Math.PI * rOut;
   const circIn = 2 * Math.PI * rIn;
 
-  const top5 = (departments.length > 0 ? departments.slice(0, 5) : [
+  const top5 = (departments.length > 0 ? departments : [
     { name: 'MERCEARIA', revenue: totalRev * 0.32 },
     { name: 'AÇOUGUE', revenue: totalRev * 0.24 },
     { name: 'H.F.G', revenue: totalRev * 0.18 },
@@ -671,7 +994,9 @@ function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
   ]);
   const sumTop5 = top5.reduce((s, d) => s + (d.revenue || 0), 0) || 1;
   const outer = top5.map((d, i) => ({
+    name: d.name,
     label: d.name,
+    revenue: d.revenue || 0,
     pct: ((d.revenue || 0) / sumTop5) * 100,
     color: DEPT_COLORS[i % DEPT_COLORS.length]
   }));
@@ -684,11 +1009,15 @@ function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
   let offsetOut = 0;
   let offsetIn = 0;
 
+  const currentHover = activeHoverName || internalHover;
+  const activeSector = outer.find(s => s.name === currentHover);
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ flexShrink: 0 }}>
         <g transform={`rotate(-90 ${cx} ${cy})`}>
           {outer.map((seg, i) => {
+            const isHov = currentHover === seg.name;
             const len = Math.max(0, (seg.pct / 100) * circOut - 2.5);
             const el = (
               <circle
@@ -698,9 +1027,12 @@ function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
                 r={rOut}
                 fill="none"
                 stroke={seg.color}
-                strokeWidth="14"
+                strokeWidth={isHov ? 18 : 14}
                 strokeDasharray={`${len} ${circOut}`}
                 strokeDashoffset={-offsetOut}
+                style={{ cursor: 'pointer', transition: 'stroke-width 0.15s ease' }}
+                onMouseEnter={() => { setInternalHover(seg.name); onHoverSector && onHoverSector(seg.name); }}
+                onMouseLeave={() => { setInternalHover(null); onHoverSector && onHoverSector(null); }}
               />
             );
             offsetOut += (seg.pct / 100) * circOut;
@@ -725,23 +1057,49 @@ function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
             return el;
           })}
         </g>
-        <text x={cx} y={cy - 2} textAnchor="middle" fontSize="18" fontWeight="900" fill="#0F172A">
-          {Math.round(totalRev / 1000).toLocaleString('pt-BR')}
-        </text>
-        <text x={cx} y={cy + 13} textAnchor="middle" fontSize="8.5" fontWeight="800" fill="#94A3B8" letterSpacing="0.6px">
-          MIL FAT.
-        </text>
+        {activeSector ? (
+          <>
+            <text x={cx} y={cy - 3} textAnchor="middle" fontSize="13" fontWeight="900" fill={activeSector.color}>
+              {formatCompactNumber(activeSector.revenue)}
+            </text>
+            <text x={cx} y={cy + 12} textAnchor="middle" fontSize="8" fontWeight="800" fill="#0F172A">
+              {activeSector.name.substring(0, 10)}
+            </text>
+          </>
+        ) : (
+          <>
+            <text x={cx} y={cy - 2} textAnchor="middle" fontSize="18" fontWeight="900" fill="#0F172A">
+              {Math.round(totalRev / 1000).toLocaleString('pt-BR')}
+            </text>
+            <text x={cx} y={cy + 13} textAnchor="middle" fontSize="8.5" fontWeight="800" fill="#94A3B8" letterSpacing="0.6px">
+              MIL FAT.
+            </text>
+          </>
+        )}
       </svg>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-        {outer.map((seg, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 10 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#334155', fontWeight: 700 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 2, background: seg.color }} />
-              <span style={{ maxWidth: 88, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{seg.label}</span>
-            </span>
-            <span style={{ fontWeight: 800, color: seg.color }}>{seg.pct.toFixed(0)}%</span>
-          </div>
-        ))}
+        {outer.map((seg, i) => {
+          const isHov = currentHover === seg.name;
+          return (
+            <div
+              key={i}
+              onMouseEnter={() => { setInternalHover(seg.name); onHoverSector && onHoverSector(seg.name); }}
+              onMouseLeave={() => { setInternalHover(null); onHoverSector && onHoverSector(null); }}
+              style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 10,
+                padding: '3px 6px', borderRadius: 6,
+                background: isHov ? '#F1F5F9' : 'transparent',
+                cursor: 'pointer', transition: 'background 0.15s ease'
+              }}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#334155', fontWeight: 700 }}>
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: seg.color }} />
+                <span style={{ maxWidth: 88, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{seg.label}</span>
+              </span>
+              <span style={{ fontWeight: 800, color: seg.color }}>{seg.pct.toFixed(0)}%</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -751,7 +1109,7 @@ function MultiRingDonutCleanSVG({ departments = [], totalRev = 3653813 }) {
 // MODAL "4 MÉTRICAS EM SINERGIA" COMPLETO
 // ============================================================================
 function SynergyExecutiveModal({ isOpen, onClose, series12, departments = [], stores = [] }) {
-  const [tab, setTab] = useState('veredito'); // 'veredito' | 'mapa'
+  const [tab, setTab] = useState('veredito');
   const [hoverCell, setHoverCell] = useState(null);
   const [hoverEdge, setHoverEdge] = useState(null);
 
@@ -1244,7 +1602,7 @@ function SynergyExecutiveModal({ isOpen, onClose, series12, departments = [], st
                 </>
               ) : (
                 <>
-                  {/* ABA 2: REDE DE CORRELAÇÕES + VARIAÇÃO */}
+                  {/* ABA 2: REDE DE CORRELAÇÕES */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 16 }}>
                     <div
                       style={{
@@ -1741,7 +2099,7 @@ function SynergyExecutiveModal({ isOpen, onClose, series12, departments = [], st
 }
 
 // ============================================================================
-// COMPONENTE PRINCIPAL DO DASHBOARD (CONECTADO À API + 3 LINHAS DE REFERÊNCIA)
+// COMPONENTE PRINCIPAL DO DASHBOARD
 // ============================================================================
 function DashboardInner() {
   const searchParams = useSearchParams();
@@ -1755,6 +2113,14 @@ function DashboardInner() {
 
   const [selectedKpiModal, setSelectedKpiModal] = useState(null);
   const [isSynergyOpen, setIsSynergyOpen] = useState(false);
+  const [selectedSynergyKpis, setSelectedSynergyKpis] = useState(['faturamento', 'margem', 'cmv', 'score']);
+
+  // Controles da Barra de Ações
+  const [isCompactView, setIsCompactView] = useState(false);
+  const [deptSortBy, setDeptSortBy] = useState('receita'); // 'receita' | 'margem'
+  const [deptFilterCount, setDeptFilterCount] = useState('top5'); // 'top3' | 'top5' | 'all'
+  const [waffleHoverSector, setWaffleHoverSector] = useState(null);
+  const [waffleCellHover, setWaffleCellHover] = useState(null);
 
   useEffect(() => {
     let active = true;
@@ -1795,7 +2161,7 @@ function DashboardInner() {
     totalProfit: kpis.margemContribuicaoPrev || 0
   };
 
-  const byDepartment = useMemo(() => {
+  const rawDepts = useMemo(() => {
     const raw = dashboardData?.charts?.marcasDonut || dashboardData?.marcas || [];
     return raw.map(d => ({
       name: d.name || d.marca || 'Setor',
@@ -1805,6 +2171,18 @@ function DashboardInner() {
       marginPct: Number(d.margemContribuicaoPerc || 0)
     }));
   }, [dashboardData]);
+
+  const sortedDepts = useMemo(() => {
+    const list = [...rawDepts];
+    if (deptSortBy === 'margem') {
+      list.sort((a, b) => b.marginPct - a.marginPct);
+    } else {
+      list.sort((a, b) => b.revenue - a.revenue);
+    }
+    if (deptFilterCount === 'top3') return list.slice(0, 3);
+    if (deptFilterCount === 'top5') return list.slice(0, 5);
+    return list;
+  }, [rawDepts, deptSortBy, deptFilterCount]);
 
   const byStore = useMemo(() => {
     const raw = dashboardData?.tables?.vendedores || dashboardData?.charts?.topVendedores || [];
@@ -1837,8 +2215,9 @@ function DashboardInner() {
       ? ((totalProf - prevSummary.totalProfit) / prevSummary.totalProfit) * 100
       : Number(kpis.margemContribuicaoDeltaPct || -25.7);
 
+  // Waffle Chart 10x10 com Interatividade Total
   const waffleData = useMemo(() => {
-    const sorted = [...byDepartment].sort((a, b) => (b.revenue || 0) - (a.revenue || 0));
+    const sorted = [...rawDepts].sort((a, b) => (b.revenue || 0) - (a.revenue || 0));
     const top3 = sorted.slice(0, 3);
     const othersRev = sorted.slice(3).reduce((acc, d) => acc + (d.revenue || 0), 0);
     const sumAll = sorted.reduce((acc, d) => acc + (d.revenue || 0), 0) || 1;
@@ -1883,7 +2262,34 @@ function DashboardInner() {
     });
     while (cells.length < 100) cells.push(groups[3]);
     return { groups, cells };
-  }, [byDepartment, totalRev]);
+  }, [rawDepts, totalRev]);
+
+  const toggleSynergyKpi = (key, e) => {
+    e.stopPropagation();
+    setSelectedSynergyKpis(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
+
+  // Exportar CSV Rápido Real dos Dados Exibidos
+  const handleExportCsv = () => {
+    const headers = ['Período', 'Faturamento (R$)', 'CMV (R$)', 'Margem Bruta (R$)', 'Volume (un)'];
+    const rows = series12.labels.map((lbl, i) => [
+      lbl,
+      series12.rev[i]?.toFixed(2) || '0',
+      series12.cmv[i]?.toFixed(2) || '0',
+      series12.prof[i]?.toFixed(2) || '0',
+      series12.vol[i] || '0'
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `analisecore-dre-${dataInicioParam}-${dataFimParam}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div style={{ minHeight: '100vh', background: '#EEF2F9', paddingBottom: 40 }}>
@@ -1896,7 +2302,9 @@ function DashboardInner() {
           alignItems: 'center',
           justifyContent: 'space-between',
           color: '#FFFFFF',
-          boxShadow: '0 4px 15px rgba(37,99,235,0.18)'
+          boxShadow: '0 4px 15px rgba(37,99,235,0.18)',
+          flexWrap: 'wrap',
+          gap: 10
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1931,7 +2339,92 @@ function DashboardInner() {
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {/* BARRA DE FERRAMENTAS VIVA COM AÇÕES RÁPIDAS */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setDeptSortBy(prev => prev === 'receita' ? 'margem' : 'receita')}
+            title="Alternar Ordenação de Setores (Faturamento vs Margem)"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              background: 'rgba(255,255,255,0.14)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '5px 11px',
+              borderRadius: 8,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'background 0.15s ease'
+            }}
+          >
+            <ArrowUpDown size={12} /> {deptSortBy === 'receita' ? 'Por Faturamento' : 'Por Margem'}
+          </button>
+
+          <button
+            onClick={() => setDeptFilterCount(prev => prev === 'top5' ? 'top3' : prev === 'top3' ? 'all' : 'top5')}
+            title="Filtrar quantidade de setores em destaque"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              background: 'rgba(255,255,255,0.14)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '5px 11px',
+              borderRadius: 8,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'background 0.15s ease'
+            }}
+          >
+            <Layers size={12} /> {deptFilterCount === 'top5' ? 'Top 5 Setores' : deptFilterCount === 'top3' ? 'Top 3 Setores' : 'Todos'}
+          </button>
+
+          <button
+            onClick={handleExportCsv}
+            title="Exportar CSV Consolidado"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              background: 'rgba(255,255,255,0.14)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '5px 11px',
+              borderRadius: 8,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'background 0.15s ease'
+            }}
+          >
+            <Download size={12} /> CSV
+          </button>
+
+          <button
+            onClick={() => setIsCompactView(prev => !prev)}
+            title="Alternar densidade Compacta / Confortável"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 5,
+              background: isCompactView ? '#FFFFFF' : 'rgba(255,255,255,0.14)',
+              color: isCompactView ? '#1E40AF' : '#FFFFFF',
+              border: '1px solid rgba(255,255,255,0.2)',
+              padding: '5px 11px',
+              borderRadius: 8,
+              fontSize: 11,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <LayoutGrid size={12} /> {isCompactView ? 'Visão Compacta' : 'Visão Normal'}
+          </button>
+
           <button
             onClick={() => setIsSynergyOpen(true)}
             style={{
@@ -1949,18 +2442,18 @@ function DashboardInner() {
               boxShadow: '0 2px 8px rgba(15,23,42,0.15)'
             }}
           >
-            <Zap size={13} fill="#1E40AF" /> Sinergia (4)
+            <Zap size={13} fill="#1E40AF" /> Sinergia ({selectedSynergyKpis.length})
           </button>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, fontWeight: 600, color: '#DBEAFE' }}>
-          <span style={{ width: 8, height: 8, borderRadius: 999, background: '#34D399', display: 'inline-block' }} />
+          <span style={{ width: 8, height: 8, borderRadius: 999, background: '#34D399', display: 'inline-block', boxShadow: '0 0 8px #34D399' }} />
           Ao vivo · atualizado agora
         </div>
       </div>
 
-      {/* CONTEÚDO PRINCIPAL (3 LINHAS DE ALTA DENSIDADE) */}
-      <div style={{ maxWidth: 1600, margin: '0 auto', padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* CONTEÚDO PRINCIPAL COM MOTION CARDS */}
+      <div style={{ maxWidth: 1600, margin: '0 auto', padding: isCompactView ? '12px 16px' : '18px 20px', display: 'flex', flexDirection: 'column', gap: isCompactView ? 12 : 16 }}>
         {error && (
           <div
             style={{
@@ -1977,22 +2470,27 @@ function DashboardInner() {
           </div>
         )}
 
-        {/* LINHA 1: 4 KPI CARDS COMPACTOS + 1 CARD LARGO */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 14 }}>
+        {/* =================================================================
+            LINHA 1: 4 KPI CARDS COMPACTOS COM AMBIENT GLOW + 1 CARD LARGO
+        ================================================================= */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: isCompactView ? 10 : 14 }}>
           {/* KPI 1: FATURAMENTO */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             onClick={() => setSelectedKpiModal('faturamento')}
             style={{
               gridColumn: 'span 2',
-              background: '#FFFFFF',
+              background: 'radial-gradient(130px circle at 24px 24px, rgba(37,99,235,0.08), transparent 70%), #FFFFFF',
               borderRadius: 18,
-              padding: 16,
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
+              padding: isCompactView ? 12 : 16,
+              border: selectedSynergyKpis.includes('faturamento') ? '2px solid #2563EB' : '1px solid #E2E8F0',
+              boxShadow: selectedSynergyKpis.includes('faturamento') ? '0 0 16px rgba(37,99,235,0.2)' : '0 8px 26px rgba(15,23,42,0.04)',
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
@@ -2018,49 +2516,78 @@ function DashboardInner() {
                   <div style={{ fontSize: 10, color: '#94A3B8' }}>Período ativo</div>
                 </div>
               </div>
-              <span
-                style={{
-                  fontSize: 9.5,
-                  fontWeight: 800,
-                  padding: '2px 7px',
-                  borderRadius: 999,
-                  background: revDelta >= 0 ? '#ECFDF5' : '#FEF2F2',
-                  color: revDelta >= 0 ? '#059669' : '#DC2626',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {revDelta >= 0 ? '+' : ''}
-                {revDelta.toFixed(1)}%
-              </span>
+
+              {/* Botão de Sinergia no Canto */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span
+                  style={{
+                    fontSize: 9.5,
+                    fontWeight: 800,
+                    padding: '2px 7px',
+                    borderRadius: 999,
+                    background: revDelta >= 0 ? '#ECFDF5' : '#FEF2F2',
+                    color: revDelta >= 0 ? '#059669' : '#DC2626',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {revDelta >= 0 ? '+' : ''}
+                  {revDelta.toFixed(1)}%
+                </span>
+                <button
+                  onClick={(e) => toggleSynergyKpi('faturamento', e)}
+                  title="Selecionar para análise de Sinergia"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid #CBD5E1',
+                    background: selectedSynergyKpis.includes('faturamento') ? '#2563EB' : '#FFFFFF',
+                    color: selectedSynergyKpis.includes('faturamento') ? '#FFFFFF' : '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: 10
+                  }}
+                >
+                  <Check size={11} />
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 14, gap: 6 }}>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  {formatCurrency(totalRev, true)}
+                <div style={{ display: 'flex', alignItems: 'baseline', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: '#64748B', marginRight: 3 }}>R$</span>
+                  <span style={{ fontSize: 26, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    <AnimatedCounter value={totalRev} formatCompact />
+                  </span>
                 </div>
-                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5 }}>
+                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5, whiteSpace: 'nowrap' }}>
                   vs ant. <strong style={{ color: '#475569' }}>{formatCurrency(prevSummary.totalRevenue || totalRev * 1.12, true)}</strong>
                 </div>
               </div>
               <MiniSparklineSVG data={series12.rev} color="#2563EB" id="spkRev" />
             </div>
-          </div>
+          </motion.div>
 
           {/* KPI 2: MARGEM BRUTA */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             onClick={() => setSelectedKpiModal('margem')}
             style={{
               gridColumn: 'span 2',
-              background: '#FFFFFF',
+              background: 'radial-gradient(130px circle at 24px 24px, rgba(147,51,234,0.08), transparent 70%), #FFFFFF',
               borderRadius: 18,
-              padding: 16,
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
+              padding: isCompactView ? 12 : 16,
+              border: selectedSynergyKpis.includes('margem') ? '2px solid #8B5CF6' : '1px solid #E2E8F0',
+              boxShadow: selectedSynergyKpis.includes('margem') ? '0 0 16px rgba(139,92,246,0.2)' : '0 8px 26px rgba(15,23,42,0.04)',
               cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
@@ -2086,47 +2613,77 @@ function DashboardInner() {
                   <div style={{ fontSize: 10, color: '#94A3B8' }}>{marginPct.toFixed(1)}% sobre fat.</div>
                 </div>
               </div>
-              <span
-                style={{
-                  fontSize: 9.5,
-                  fontWeight: 800,
-                  padding: '2px 7px',
-                  borderRadius: 999,
-                  background: profDelta >= 0 ? '#ECFDF5' : '#FEF2F2',
-                  color: profDelta >= 0 ? '#059669' : '#DC2626',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                {profDelta >= 0 ? '+' : ''}
-                {profDelta.toFixed(1)}%
-              </span>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span
+                  style={{
+                    fontSize: 9.5,
+                    fontWeight: 800,
+                    padding: '2px 7px',
+                    borderRadius: 999,
+                    background: profDelta >= 0 ? '#ECFDF5' : '#FEF2F2',
+                    color: profDelta >= 0 ? '#059669' : '#DC2626',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {profDelta >= 0 ? '+' : ''}
+                  {profDelta.toFixed(1)}%
+                </span>
+                <button
+                  onClick={(e) => toggleSynergyKpi('margem', e)}
+                  title="Selecionar para análise de Sinergia"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid #CBD5E1',
+                    background: selectedSynergyKpis.includes('margem') ? '#8B5CF6' : '#FFFFFF',
+                    color: selectedSynergyKpis.includes('margem') ? '#FFFFFF' : '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: 10
+                  }}
+                >
+                  <Check size={11} />
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 14, gap: 6 }}>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  {formatCurrency(totalProf, true)}
+                <div style={{ display: 'flex', alignItems: 'baseline', whiteSpace: 'nowrap' }}>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: '#64748B', marginRight: 3 }}>R$</span>
+                  <span style={{ fontSize: 26, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                    <AnimatedCounter value={totalProf} formatCompact />
+                  </span>
                 </div>
-                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5 }}>
+                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5, whiteSpace: 'nowrap' }}>
                   Lucro líq. <strong style={{ color: '#475569' }}>{marginPct.toFixed(1)}%</strong>
                 </div>
               </div>
               <MiniSparklineSVG data={series12.prof} color="#9333EA" id="spkProf" />
             </div>
-          </div>
+          </motion.div>
 
           {/* KPI 3: CUSTO CMV */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
+            onClick={() => setSelectedKpiModal('cmv')}
             style={{
               gridColumn: 'span 2',
-              background: '#FFFFFF',
+              background: 'radial-gradient(130px circle at 24px 24px, rgba(6,182,212,0.08), transparent 70%), #FFFFFF',
               borderRadius: 18,
-              padding: 16,
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
+              padding: isCompactView ? 12 : 16,
+              border: selectedSynergyKpis.includes('cmv') ? '2px solid #06B6D4' : '1px solid #E2E8F0',
+              boxShadow: selectedSynergyKpis.includes('cmv') ? '0 0 16px rgba(6,182,212,0.2)' : '0 8px 26px rgba(15,23,42,0.04)',
+              cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
@@ -2152,45 +2709,72 @@ function DashboardInner() {
                   <div style={{ fontSize: 10, color: '#94A3B8' }}>Peso sobre fat.</div>
                 </div>
               </div>
-              <span
-                style={{
-                  fontSize: 9.5,
-                  fontWeight: 800,
-                  padding: '2px 7px',
-                  borderRadius: 999,
-                  background: '#ECFDF5',
-                  color: '#059669'
-                }}
-              >
-                -1,8 p.p.
-              </span>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span
+                  style={{
+                    fontSize: 9.5,
+                    fontWeight: 800,
+                    padding: '2px 7px',
+                    borderRadius: 999,
+                    background: '#ECFDF5',
+                    color: '#059669'
+                  }}
+                >
+                  -1,8 p.p.
+                </span>
+                <button
+                  onClick={(e) => toggleSynergyKpi('cmv', e)}
+                  title="Selecionar para análise de Sinergia"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid #CBD5E1',
+                    background: selectedSynergyKpis.includes('cmv') ? '#06B6D4' : '#FFFFFF',
+                    color: selectedSynergyKpis.includes('cmv') ? '#FFFFFF' : '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: 10
+                  }}
+                >
+                  <Check size={11} />
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 14, gap: 6 }}>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  {cmvPct.toFixed(1)}%
+                <div style={{ fontSize: 26, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1, whiteSpace: 'nowrap' }}>
+                  <AnimatedCounter value={cmvPct} isPercent />
                 </div>
-                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5 }}>
+                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5, whiteSpace: 'nowrap' }}>
                   Total <strong style={{ color: '#475569' }}>{formatCurrency(totalCmv, true)}</strong>
                 </div>
               </div>
               <BulletGoalSVG valuePct={cmvPct} goalPct={68} />
             </div>
-          </div>
+          </motion.div>
 
           {/* KPI 4: SCORE DE EFICIÊNCIA */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
+            onClick={() => setSelectedKpiModal('volumeTicket')}
             style={{
               gridColumn: 'span 2',
-              background: '#FFFFFF',
+              background: 'radial-gradient(130px circle at 24px 24px, rgba(245,158,11,0.08), transparent 70%), #FFFFFF',
               borderRadius: 18,
-              padding: 16,
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
+              padding: isCompactView ? 12 : 16,
+              border: selectedSynergyKpis.includes('score') ? '2px solid #F59E0B' : '1px solid #E2E8F0',
+              boxShadow: selectedSynergyKpis.includes('score') ? '0 0 16px rgba(245,158,11,0.2)' : '0 8px 26px rgba(15,23,42,0.04)',
+              cursor: 'pointer',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 6 }}>
@@ -2216,40 +2800,64 @@ function DashboardInner() {
                   <div style={{ fontSize: 10, color: '#94A3B8' }}>Eficiência operacional</div>
                 </div>
               </div>
-              <span
-                style={{
-                  fontSize: 9.5,
-                  fontWeight: 800,
-                  padding: '2px 7px',
-                  borderRadius: 999,
-                  background: '#ECFDF5',
-                  color: '#059669'
-                }}
-              >
-                Excelente
-              </span>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span
+                  style={{
+                    fontSize: 9.5,
+                    fontWeight: 800,
+                    padding: '2px 7px',
+                    borderRadius: 999,
+                    background: '#ECFDF5',
+                    color: '#059669'
+                  }}
+                >
+                  Excelente
+                </span>
+                <button
+                  onClick={(e) => toggleSynergyKpi('score', e)}
+                  title="Selecionar para análise de Sinergia"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                    border: '1px solid #CBD5E1',
+                    background: selectedSynergyKpis.includes('score') ? '#F59E0B' : '#FFFFFF',
+                    color: selectedSynergyKpis.includes('score') ? '#FFFFFF' : '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: 10
+                  }}
+                >
+                  <Check size={11} />
+                </button>
+              </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 14, gap: 6 }}>
               <div>
-                <div style={{ fontSize: 24, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1 }}>
-                  +{efficiencyScore} <span style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8' }}>pts</span>
+                <div style={{ fontSize: 26, fontWeight: 900, color: '#0F172A', letterSpacing: '-0.03em', lineHeight: 1, whiteSpace: 'nowrap' }}>
+                  <AnimatedCounter value={efficiencyScore} isPts /> <span style={{ fontSize: 12, fontWeight: 700, color: '#94A3B8' }}>pts</span>
                 </div>
-                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5 }}>
+                <div style={{ fontSize: 9.5, color: '#94A3B8', marginTop: 5, whiteSpace: 'nowrap' }}>
                   Acima da meta <strong style={{ color: '#475569' }}>+75 pts</strong>
                 </div>
               </div>
               <SemiGaugeSVG score={efficiencyScore} />
             </div>
-          </div>
+          </motion.div>
 
-          {/* KPI 5 LARGO: EVOLUÇÃO CMV & MARGEM */}
-          <div
+          {/* KPI 5 LARGO: EVOLUÇÃO CMV & MARGEM (12 BARRAS EMPILHADAS COM INTERAÇÃO DE HOVER) */}
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 4',
-              background: '#FFFFFF',
+              background: 'radial-gradient(220px circle at 24px 24px, rgba(139,92,246,0.05), transparent 70%), #FFFFFF',
               borderRadius: 18,
-              padding: 16,
+              padding: isCompactView ? 12 : 16,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
               display: 'flex',
@@ -2286,18 +2894,22 @@ function DashboardInner() {
             <div style={{ marginTop: 6 }}>
               <StackedBarsCard5SVG labels={series12.labels} cmvArr={series12.cmv} profArr={series12.prof} />
             </div>
-          </div>
+          </motion.div>
         </div>
 
-        {/* LINHA 2: EVOLUÇÃO & PROJEÇÃO + WAFFLE 10x10 + ENTRADAS E SAÍDAS */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 14 }}>
+        {/* =================================================================
+            LINHA 2: EVOLUÇÃO & PROJEÇÃO + WAFFLE 10x10 + ENTRADAS E SAÍDAS
+        ================================================================= */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: isCompactView ? 10 : 14 }}>
           {/* PAINEL ESQUERDO: EVOLUÇÃO + META + CONE DE PROJEÇÃO */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 4',
               background: '#FFFFFF',
               borderRadius: 18,
-              padding: 18,
+              padding: isCompactView ? 14 : 18,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
               display: 'flex',
@@ -2346,20 +2958,23 @@ function DashboardInner() {
             </div>
 
             <EvolutionProjectionSVG labels={series12.labels} revArr={series12.rev} />
-          </div>
+          </motion.div>
 
-          {/* PAINEL CENTRAL: WAFFLE CHART 10x10 */}
-          <div
+          {/* PAINEL CENTRAL: WAFFLE CHART 10x10 COM INTERATIVIDADE CRUZADA */}
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 4',
               background: '#FFFFFF',
               borderRadius: 18,
-              padding: 18,
+              padding: isCompactView ? 14 : 18,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
               display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
+              position: 'relative'
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
@@ -2384,6 +2999,7 @@ function DashboardInner() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 12, alignItems: 'center', margin: 'auto 0' }}>
+              {/* Grid 10x10 */}
               <div
                 style={{
                   gridColumn: 'span 7',
@@ -2393,71 +3009,114 @@ function DashboardInner() {
                   padding: 8,
                   background: '#F8FAFC',
                   borderRadius: 12,
-                  border: '1px solid #F1F5F9'
+                  border: '1px solid #F1F5F9',
+                  position: 'relative'
                 }}
               >
-                {waffleData.cells.map((cell, idx) => (
-                  <div
-                    key={idx}
-                    title={`${cell.name}: ${cell.pct}%`}
-                    style={{
-                      aspectRatio: '1 / 1',
-                      borderRadius: 4,
-                      background: cell.color,
-                      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.25)'
-                    }}
-                  />
-                ))}
+                {waffleData.cells.map((cell, idx) => {
+                  const isHighlighted = waffleHoverSector ? cell.name === waffleHoverSector : true;
+                  const isCellHovered = waffleCellHover === idx;
+                  return (
+                    <motion.div
+                      key={idx}
+                      whileHover={{ scale: 1.25 }}
+                      transition={{ type: 'spring', stiffness: 450, damping: 20 }}
+                      onMouseEnter={() => setWaffleCellHover(idx)}
+                      onMouseLeave={() => setWaffleCellHover(null)}
+                      style={{
+                        aspectRatio: '1 / 1',
+                        borderRadius: 4,
+                        background: cell.color,
+                        boxShadow: isCellHovered ? '0 0 8px rgba(37,99,235,0.6)' : 'inset 0 1px 1px rgba(255,255,255,0.25)',
+                        opacity: isHighlighted ? 1 : 0.22,
+                        cursor: 'pointer',
+                        transition: 'opacity 0.2s ease, box-shadow 0.15s ease'
+                      }}
+                    />
+                  );
+                })}
               </div>
 
+              {/* Legenda Lateral Interativa */}
               <div style={{ gridColumn: 'span 5', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {waffleData.groups.map((g) => (
-                  <div
-                    key={g.name}
-                    style={{
-                      padding: '8px 10px',
-                      borderRadius: 10,
-                      background: '#F8FAFC',
-                      border: '1px solid #F1F5F9',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                      <span style={{ width: 8, height: 8, borderRadius: 2, background: g.dot, flexShrink: 0 }} />
-                      <span
-                        style={{
-                          fontSize: 10.5,
-                          fontWeight: 800,
-                          color: '#1E293B',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis'
-                        }}
-                      >
-                        {g.name}
-                      </span>
+                {waffleData.groups.map((g) => {
+                  const isHov = waffleHoverSector === g.name;
+                  return (
+                    <div
+                      key={g.name}
+                      onMouseEnter={() => setWaffleHoverSector(g.name)}
+                      onMouseLeave={() => setWaffleHoverSector(null)}
+                      style={{
+                        padding: '8px 10px',
+                        borderRadius: 10,
+                        background: isHov ? '#EFF6FF' : '#F8FAFC',
+                        border: isHov ? '1px solid #93C5FD' : '1px solid #F1F5F9',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: 2, background: g.dot, flexShrink: 0 }} />
+                        <span
+                          style={{
+                            fontSize: 10.5,
+                            fontWeight: 800,
+                            color: isHov ? '#1D4ED8' : '#1E293B',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                          }}
+                        >
+                          {g.name}
+                        </span>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 4 }}>
+                        <span style={{ fontSize: 10.5, fontWeight: 900, color: '#0F172A' }}>
+                          {formatCurrency(g.rev, true)}
+                        </span>
+                        <span style={{ fontSize: 9.5, fontWeight: 700, color: '#94A3B8', marginLeft: 4 }}>{g.pct}%</span>
+                      </div>
                     </div>
-                    <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 4 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 900, color: '#0F172A' }}>
-                        {formatCurrency(g.rev, true)}
-                      </span>
-                      <span style={{ fontSize: 9.5, fontWeight: 700, color: '#94A3B8', marginLeft: 4 }}>{g.pct}%</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
-          </div>
 
-          {/* PAINEL DIREITO: ENTRADAS E SAÍDAS */}
-          <div
+            {/* Tooltip do Waffle Cell */}
+            {waffleCellHover !== null && (
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 14,
+                  left: 20,
+                  background: '#0F172A',
+                  color: '#FFFFFF',
+                  padding: '6px 10px',
+                  borderRadius: 8,
+                  fontSize: 9.5,
+                  boxShadow: '0 8px 20px rgba(15,23,42,0.3)',
+                  pointerEvents: 'none',
+                  zIndex: 30,
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                <strong style={{ color: '#38BDF8' }}>{waffleData.cells[waffleCellHover].name}</strong> · 1% (~{formatCurrency(totalRev * 0.01, true)})
+              </div>
+            )}
+          </motion.div>
+
+          {/* PAINEL DIREITO: ENTRADAS E SAÍDAS OPERACIONAIS */}
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 4',
               background: '#FFFFFF',
               borderRadius: 18,
-              padding: 18,
+              padding: isCompactView ? 14 : 18,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
               display: 'flex',
@@ -2502,18 +3161,22 @@ function DashboardInner() {
             </div>
 
             <DivergingMirroredSVG labels={series12.labels} revArr={series12.rev} cmvArr={series12.cmv} />
-          </div>
+          </motion.div>
         </div>
 
-        {/* LINHA 3: SANKEY FLOW RICO + DONUT DUPLO */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: 14 }}>
+        {/* =================================================================
+            LINHA 3: SANKEY FLOW RICO + DONUT DUPLO
+        ================================================================= */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, minmax(0, 1fr))', gap: isCompactView ? 10 : 14 }}>
           {/* SANKEY DIAGRAM */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 8',
               background: '#FFFFFF',
               borderRadius: 18,
-              padding: 18,
+              padding: isCompactView ? 14 : 18,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)'
             }}
@@ -2539,16 +3202,18 @@ function DashboardInner() {
               </span>
             </div>
 
-            <SankeyFlowRichSVG departments={byDepartment} totalRev={totalRev} totalProf={totalProf} />
-          </div>
+            <SankeyFlowRichSVG departments={sortedDepts} totalRev={totalRev} totalProf={totalProf} />
+          </motion.div>
 
           {/* MULTI-RING DONUT */}
-          <div
+          <motion.div
+            whileHover={{ y: -3, boxShadow: '0 16px 36px rgba(15,23,42,0.08)' }}
+            transition={{ duration: 0.18 }}
             style={{
               gridColumn: 'span 4',
               background: '#FFFFFF',
               borderRadius: 18,
-              padding: 18,
+              padding: isCompactView ? 14 : 18,
               border: '1px solid #E2E8F0',
               boxShadow: '0 8px 26px rgba(15,23,42,0.04)',
               display: 'flex',
@@ -2577,8 +3242,13 @@ function DashboardInner() {
               </span>
             </div>
 
-            <MultiRingDonutCleanSVG departments={byDepartment} totalRev={totalRev} />
-          </div>
+            <MultiRingDonutCleanSVG
+              departments={sortedDepts}
+              totalRev={totalRev}
+              onHoverSector={(name) => setWaffleHoverSector(name)}
+              activeHoverName={waffleHoverSector}
+            />
+          </motion.div>
         </div>
       </div>
 
@@ -2587,11 +3257,11 @@ function DashboardInner() {
         isOpen={isSynergyOpen}
         onClose={() => setIsSynergyOpen(false)}
         series12={series12}
-        departments={byDepartment}
+        departments={rawDepts}
         stores={byStore}
       />
 
-      {/* MODAL KPI DETAIL (FATURAMENTO / MARGEM DRILLDOWN) */}
+      {/* MODAL KPI DETAIL (DRILL-DOWN EXECUTIVO DE QUALQUER UM DOS KPIS) */}
       <ModalKpiDetail
         isOpen={!!selectedKpiModal}
         onClose={() => setSelectedKpiModal(null)}
