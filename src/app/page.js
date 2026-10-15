@@ -27,6 +27,8 @@ const formatCurrency = (val, compact = false) => {
   }).format(val || 0);
 };
 
+const formatK = (val) => formatCurrency(val, true);
+
 const formatNumber = (val) => Math.round(val || 0).toLocaleString('pt-BR');
 
 const formatCompactNumber = (val) => {
